@@ -1,6 +1,23 @@
 @charset "utf-8";
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500&display=swap');
 
+/*reset*/
+* {   
+    margin:0;
+    padding:0;
+}
+li{
+    list-style: none;
+}
+
+a{
+    color :inherit;
+    text-decoration: none;
+}
+/*reset End*/
+
+
+
 body{
     font-family:'Noto Serif KR', serif;
     font-size:100%;
@@ -8,7 +25,18 @@ body{
 
 header{
     width: 100vw;
-    height: 10vh;
+    height: vh;
     display: flex;
     justify-content: space-between;
+    font-size:1rem;
+    box-shadow: 0 4px 10px pink;
+}
+
+.shortcut .util ul li{
+    float:left;
+    padding-left:0.5rem;
+}
+
+.relative a p{
+    border: solid;
 }
