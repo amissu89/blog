@@ -37,11 +37,36 @@
         body { border-top: 16px solid #ffa100; }
       }
     </style>
+
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
-    <header>THIS IS HEADER</header>
+    <div class="wrapper">
+      <header>
+        <div class="shortcut">
+          <nav class="util">
+            <ul>
+              <li><a href="#"><img src="img/svg/house-heart.svg" alt="home"></a></li>
+              <li><a href="#"><img src="img/svg/instagram.svg" alt="instagram"></a></li>
+              <li><a href="#"><img src="img/svg/facebook.svg" alt="instagram"></a></li>
+            </ul>
+          </nav>
+          
+        </div>
+        <h1 class="logo"><a href="index.html"><img src="img/logo.jfif" alt="logo" width="40px"></a></h1>
+
+        <div class="relative">
+          <a href="#"><p>지난호 보기</p></a>
+          <a href="#"><p>구독신청</p></a>
+        </div>
+      </header>
+    </div>
+ 
     <main>THIS IS MAIN</main>
     <footer>THIS IS FOOTER</footer>
+
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         const loadEl = document.querySelector('#load');
