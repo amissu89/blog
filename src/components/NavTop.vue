@@ -12,33 +12,44 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <router-link to="/" class="nav-link"><button type="button" class="btn btn-outline-dark">Home</button></router-link>
+                    <li class="nav-item"   v-for="(link, index) in links" :key="index">
+                        <router-link :to=link.to class="nav-link">
+                            <button type="button" class="btn btn-outline-dark">{{ link.title }}</button> 
+                        </router-link>
                     </li>
-                    <li class="nav-item">
-                        <router-link to="/about" class="nav-link"><button type="button" class="btn btn-outline-dark">About</button></router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link to="/til" class="nav-link"><button type="button" class="btn btn-outline-dark">TIL;</button></router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link to="/diary" class="nav-link"><button type="button" class="btn btn-outline-dark">Diary</button></router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link to="/profile" class="nav-link"><button type="button" class="btn btn-outline-dark">Profile</button></router-link>
-                    </li>
-
                 </ul>
             </div>
         </div>
     </nav>
 </template>
 <script setup>
-
+import { ref } from 'vue'
+const links = ref(
+    [
+        {
+            to: '/',
+            title: 'Home'
+        },
+        {
+            to: '/about',
+            title: 'About'
+        },
+        {
+            to: '/til',
+            title: 'TIL;'
+        },
+        {
+            to: '/diary',
+            title: 'Diary'
+        },
+        {
+            to: '/profile',
+            title: 'Profile'
+        },
+    ]
+)
 </script>
 <style scoped>
-.btn {
-    margin-right: 1%;
-}
+
 
 </style>

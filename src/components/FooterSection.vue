@@ -1,6 +1,6 @@
 <template lang="">
     <div class="container">
-        fff
+        <div class="fixed-bottom">...</div>
     </div>
 </template>
 <script>
