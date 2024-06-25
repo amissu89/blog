@@ -1,6 +1,6 @@
 <template lang="">
     <div class="container">
-        <div class="fixed-bottom">...</div>
+        
     </div>
 </template>
 <script>
@@ -12,5 +12,7 @@ export default {
 <style scoped>
 .container{
     border: solid 1px black;
+    height:10vh;
+    margin-top:1vh;
 }    
 </style>

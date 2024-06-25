@@ -10,6 +10,9 @@ export default {
 
 }
 </script>
-<style lang="">
-    
+<style scoped>
+.container{
+    height: 80vh;
+    border: 1px solid saddlebrown;
+}    
 </style>
