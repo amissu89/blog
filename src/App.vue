@@ -1,28 +1,24 @@
 <template>
-  <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
   <div class="container">
-    <NavTop @navigate="currentComponent = $event" />
-    <component :is="currentComponent"></component>
+    <NavTop />
+    <Canvas />
+    <Footer />
   </div>
 </template>
 
 <script> 
 import NavTop from './components/NavTop.vue'
-import ProfilePage from './components/ProfilePage.vue'
-import TilPage from './components/TilPage.vue'
+import Canvas from './components/CanvasSection.vue'
+import Footer from './components/FooterSection.vue'
+
 
 export default {
   name: 'App',
   components : {
     NavTop,
-    ProfilePage,
-    TilPage
+    Canvas,
+    Footer
   },
-  data(){
-    return {
-      currentComponent: null,
-    }
-  }
 }
 </script>
 
