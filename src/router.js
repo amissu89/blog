@@ -7,6 +7,7 @@ import DiaryPage from './components/diary/DiaryPage.vue'
 import ProfilePage from './components/profile/ProfilePage.vue'
 import MainPage from './components/MainPage.vue'
 import SignInPage from './components/auth/SignInPage.vue'
+import SignUpPage from './components/auth/SignUpPage.vue'
 
 const routes = [
     { 
@@ -32,6 +33,10 @@ const routes = [
     {
         path: '/sign-in',
         component: SignInPage,
+    },
+    {
+        path: '/sign-up',
+        component: SignUpPage,
     },
     { 
         path: '/', 

@@ -6,3 +6,9 @@
 .btn{
     border-radius: 0;
 }
+
+.buttons{
+    display: flex;
+    justify-content: flex-end;
+    margin: 5% auto;
+}

@@ -28,27 +28,33 @@ const links = ref(
     [
         {
             to: '/',
-            title: 'Home'
+            title: 'Home',
+            auth: 'false'
         },
         {
             to: '/about',
-            title: 'About'
+            title: 'About',
+            auth: 'false'
         },
         {
             to: '/til',
-            title: 'TIL;'
+            title: 'TIL;',
+            auth: 'false'
         },
         {
             to: '/diary',
-            title: 'Diary'
+            title: 'Diary',
+            auth: 'false'
         },
         {
             to: '/profile',
-            title: 'Profile'
+            title: 'Profile',
+            auth: 'false'
         },
         {
             to: '/posting',
-            title: 'Posting'
+            title: 'Posting',
+            auth: 'true'
         }
     ]
 )
