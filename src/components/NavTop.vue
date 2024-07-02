@@ -46,6 +46,10 @@ const links = ref(
             to: '/profile',
             title: 'Profile'
         },
+        {
+            to: '/posting',
+            title: 'Posting'
+        }
     ]
 )
 </script>

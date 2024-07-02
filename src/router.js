@@ -2,9 +2,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AboutPage from './components/about/AboutPage.vue'
 import TilPage from './components/til/TilPage.vue'
+import PostingPage from './components/post/PostingPage.vue'
 import DiaryPage from './components/diary/DiaryPage.vue'
 import ProfilePage from './components/profile/ProfilePage.vue'
 import MainPage from './components/MainPage.vue'
+import SignInPage from './components/auth/SignInPage.vue'
 
 const routes = [
     { 
@@ -22,6 +24,14 @@ const routes = [
     { 
         path: '/profile', 
         component: ProfilePage 
+    },
+    {
+        path: '/posting',
+        component: PostingPage,
+    },
+    {
+        path: '/sign-in',
+        component: SignInPage,
     },
     { 
         path: '/', 

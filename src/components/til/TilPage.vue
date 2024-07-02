@@ -1,13 +1,13 @@
-<template lang="">
-    <div>
-        til
+<template>
+    <div class="container">
+        til;
     </div>
 </template>
-<script>
-export default {
-    
-}
+<script setup>
 </script>
+
+
+
 <style lang="">
-    
+
 </style>
