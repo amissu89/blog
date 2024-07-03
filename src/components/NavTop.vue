@@ -12,10 +12,12 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"   v-for="(link, index) in links" :key="index">
-                        <router-link :to=link.to class="nav-link">
-                            <button type="button" class="btn btn-outline-dark">{{ link.title }}</button> 
+                    <li class="nav-item"   v-for="(link, index) in filteredLinks" :key="index">
+                        <router-link :to=link.to class="nav-link" >
+                            <button v-if="link.to !== '#'" type="button" class="btn btn-outline-dark" :data-visible=link.visible>{{ link.title }}</button> 
+                            <button v-else type="button" class="btn btn-outline-dark" :data-visible=link.visible @click="signOut"> Logout </button>
                         </router-link>
+                        
                     </li>
                 </ul>
             </div>
@@ -23,41 +25,74 @@
     </nav>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { observeAuthState, logout } from '../firebase/auth.js'
+
+const router = useRouter()
 const links = ref(
     [
         {
             to: '/',
             title: 'Home',
-            auth: 'false'
+            visible: true
         },
         {
             to: '/about',
             title: 'About',
-            auth: 'false'
+            visible: true
         },
         {
             to: '/til',
             title: 'TIL;',
-            auth: 'false'
+            visible: true
         },
         {
             to: '/diary',
             title: 'Diary',
-            auth: 'false'
+            visible: true
         },
         {
             to: '/profile',
             title: 'Profile',
-            auth: 'false'
+            visible: true
         },
         {
             to: '/posting',
             title: 'Posting',
-            auth: 'true'
+            visible: false
+        },
+        {
+            to: '#',
+            title: 'Logout',
+            visible: false,
         }
     ]
 )
+
+const userAuthenticated = ref(false)
+const filteredLinks = computed( () => {
+    return links.value.filter( link =>{
+        return link.visible == true || userAuthenticated.value
+    })
+})
+
+onMounted( async() =>{
+    observeAuthState( (user) =>{
+        if(user){
+            userAuthenticated.value = true
+        }
+    })
+})
+
+const signOut = () =>{
+    logout().then( ()=>{
+        userAuthenticated.value = false
+        router.push('/main')
+    }).catch( error =>{
+        console.error(`Logout failed : ${error}`)
+    })
+}
 </script>
 <style scoped>
 
