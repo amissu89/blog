@@ -14,8 +14,8 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"   v-for="(link, index) in filteredLinks" :key="index">
                         <router-link :to=link.to class="nav-link" >
-                            <button v-if="link.to !== '#'" type="button" class="btn btn-outline-dark" :data-visible=link.visible>{{ link.title }}</button> 
-                            <button v-else type="button" class="btn btn-outline-dark" :data-visible=link.visible @click="signOut"> Logout </button>
+                            <button v-if="link.to !== '#'" type="button" class="btn btn-outline-dark">{{ link.title }}</button> 
+                            <button v-else type="button" class="btn btn-outline-dark" @click="signOut"> Logout </button>
                         </router-link>
                         
                     </li>
