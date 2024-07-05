@@ -30,7 +30,7 @@ const trList = document.getElementsByTagName('tr')
 trList.forEach(tr => {
     tr.addEventListener('mouseenter', () => {
     
-    }
+    })
 })
 
 </script>
