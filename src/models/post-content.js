@@ -1,9 +1,7 @@
 const PostContent = {
     id: '',
     content: '',
-    images: [],
-    attachments: [],
-    attachUrls:[],
+    images: []
 };
 
 export default PostContent

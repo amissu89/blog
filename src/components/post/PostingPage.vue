@@ -7,15 +7,22 @@
 
         <ToastEditor v-model="content" @add-image="addImage" @update:modelValue="updateContent" />
 
+        <div class="mb-3">
+            <label for="post-tag" class="form-label">Tags</label>
+            <input type="text" class="form-control" id="post-tag" v-model="postTag" />
+        </div>
+
         <div class="buttons">
-            <button type="button" class="btn red-button" @click="savePost()">
-            <span v-if="saving">
-                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                <span ref="saveBtn" role="status">저장 중...</span>
-            </span>
-            <span v-if="!saving">저장</span>
+          <button type="button" class="btn btn-outline-dark" @click="getTagData()">tag</button>
+            <button type="button" class="btn btn-outline-dark" @click="savePost()">
+              
+              <span v-if="saving">
+                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                  <span ref="saveBtn" role="status">저장 중...</span>
+              </span>
+              <span v-if="!saving">저장</span>
             </button>
-            <button type="button" class="btn btn-light" @click="$router.go(-1)">
+            <button type="button" class="btn btn-outline-dark" @click="$router.go(-1)">
                 취소
             </button>
         </div>
@@ -28,7 +35,7 @@ import ToastEditor from "../toast/ToastEditor.vue"
 import Constant from "../../constant.js"
 import {getRandomString} from "../../utility.js"
 import { observeAuthState } from '../../firebase/auth.js'
-import { addDocument, setDocument, getDocument } from '../../firebase/firestore.js'
+import { addDocument, setDocument, getDocument, updateDocument } from '../../firebase/firestore.js'
 import { uploadFile, getUrl} from '../../firebase/firestorage.js'
 import PostMeta from "../../models/post-meta.js"
 import PostContent from "../../models/post-content.js"
@@ -39,12 +46,12 @@ const route = useRoute()
 const postTitle = ref("")
 const content = ref("<p>내용을 작성하세요</p>")
 const images = ref([])
-const attachments = ref([])
 const loading = ref(false)
 const id = ref(route.params.id ? route.params.id : "")
 const saving = ref(false)
 const userUid = ref("")
 const randomValue = ref("")
+const postTag = ref("")
 
 const BOARD_META = Constant.TIL_BOARD_META
 const BOARD_CONTENT = Constant.TIL_BOARD_CONTENT
@@ -119,7 +126,10 @@ const savePost = async () => {
   try {
     saving.value = true
 
-    const postMeta = await setMetaData(userUid.value);
+    const tagList = getTagData()
+
+    const postMeta = await setMetaData(userUid.value)
+    postMeta.tags = tagList
 
     // Now, you can proceed to save the data to Firestore
     const docMetaId = await addDocument(Constant.TIL_BOARD_META, postMeta)
@@ -150,22 +160,33 @@ const setContentData = async (docId) => {
   data.content = content.value;
   data.images = [...images.value];
 
-  for (const file of attachments.value) {
-    const path = `${Constant.ATTACH_FILE_PATH}/${randomValue.value}/${file.name}`;
-    data.attachments.push(path);
-    try {
-      await uploadFile(path, file);
-      const url = await getUrl(path);
-      console.log("url : ", url);
-      data.attachUrls.push(url);
-    } catch (error) {
-      console.error("Error uploading or getting URL:", error);
-    }
-  }
   return data;
 }
 
-</script>
-<style lang="">
+const getTagData = async () => {
+  const currentTagList = postTag.value.split('#').filter( tag => tag !== '')
+
+  const snapshot = await getDocument(Constant.FILTER_COLLECTION, Constant.TAG_FILTER)
+  if (snapshot.exists) {
+    const oldTagList = snapshot.data().tagList
     
+    const setTags = new Set()
+    oldTagList.forEach( tag => setTags.add(tag))
+    currentTagList.forEach( tag => setTags.add(tag))
+
+    const tagArray = Array.from(setTags)
+
+    await updateDocument(Constant.FILTER_COLLECTION, Constant.TAG_FILTER, {tagList : tagArray})
+    
+  }
+
+  return currentTagList
+
+}
+
+</script>
+<style scoped>
+.mb-3{
+  margin-top: 1vh;
+}
 </style>

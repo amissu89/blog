@@ -1,11 +1,10 @@
 const PostMeta = {
-    index: 0,
-    category: '',
+    tags: [],
     title: 'title',
     user: '',
     createDt: null,
     updateDt: null,
-    hit: 0,
+    year: new Date(new Date().getFullYear(), 0, 1)  
 };
 
 export default PostMeta

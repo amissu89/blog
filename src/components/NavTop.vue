@@ -96,5 +96,4 @@ const signOut = () =>{
 </script>
 <style scoped>
 
-
 </style>
