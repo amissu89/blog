@@ -2,7 +2,7 @@
     <div class="container">
         <table class="table">
             <tbody>
-                <tr >
+                <tr>
                     <th scope="row">1</th>
                     <td>Mark</td>
                     <td>Otto</td>
@@ -24,14 +24,19 @@
     </div>
 </template>
 <script setup>
+
+const trList = document.getElementsByTagName('tr')
+
+trList.forEach(tr => {
+    tr.addEventListener('mouseenter', () => {
+    
+    }
+})
+
 </script>
 
 
 
 <style scoped>
 
-table tr:hover{
-    color:white;
-    background-color: black;
-}
 </style>
