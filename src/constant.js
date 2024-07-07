@@ -9,5 +9,7 @@ export default{
     TIL_BOARD_CONTENT: "til-content",
     FILTER_COLLECTION: "filters",
     TAG_FILTER: "tags",
-    YEAR_FILTER: "years"
+    YEAR_FILTER: "years",
+    ASC: "asc",
+    DESC: "desc",
 };

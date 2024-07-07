@@ -2,36 +2,56 @@
     <div class="container">
         <table class="table">
             <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td colspan="2">Larry the Bird</td>
-                    <td>@twitter</td>
+                <tr v-for="(row, index) in rows" :key="index" ref="tableRows">
+                    <th scope="row">{{ row.id }}</th>
+                    <td> {{row.title}}</td>
+                    <td> {{ row.year }}</td>
+                    <td> {{row.createDt}}</td>
                 </tr>
             </tbody>
         </table>
     </div>
 </template>
 <script setup>
+import {nextTick, onMounted, ref} from 'vue'
+import { getCollection, getDocumentsByOrdering, getDocumentsByQuery } from '../../firebase/firestore'
+import  Constant  from '../../constant.js'
 
-const trList = document.getElementsByTagName('tr')
+const rows = ref([])
+const tableRows = ref([])
 
-trList.forEach(tr => {
-    tr.addEventListener('mouseenter', () => {
-    
+onMounted( async ()=>{
+
+    const fetchItems = async() =>{
+        const collection = getCollection(Constant.TIL_BOARD_META)
+        const q = getDocumentsByOrdering( collection, "createDt", Constant.DESC)
+        const querySnapshot = await getDocumentsByQuery(q);
+
+        querySnapshot.forEach((doc) => {
+            let obj = doc.data();
+            obj.id = doc.id;
+            rows.value.push(obj);
+        })
+
+        console.log(rows)
+    }
+
+    await fetchItems()
+
+    //wait for the DOM to update
+    await nextTick()
+
+    tableRows.value.forEach(tr => {
+        tr.addEventListener('mouseenter', () => {
+            tr.classList.add('table-dark')
+        })
+
+        tr.addEventListener('mouseleave', () => {
+            tr.classList.remove('table-dark')
+        })
     })
 })
+
 
 </script>
 

@@ -126,13 +126,11 @@ const savePost = async () => {
   try {
     saving.value = true
 
-    const tagList = getTagData()
-
     const postMeta = await setMetaData(userUid.value)
-    postMeta.tags = tagList
 
     // Now, you can proceed to save the data to Firestore
     const docMetaId = await addDocument(Constant.TIL_BOARD_META, postMeta)
+    console.log(docMetaId)
     const postContent = await setContentData(docMetaId)
     await setDocument(Constant.TIL_BOARD_CONTENT, docMetaId, postContent);
 
@@ -151,6 +149,7 @@ const setMetaData = async (uid) => {
   meta.createDt = new Date().toISOString();
   meta.hit = 0;
   meta.user = uid;
+  meta.tags = await getTagData()
   return meta;
 }
 
