@@ -3,9 +3,8 @@
         <table class="table">
             <tbody>
                 <tr v-for="(row, index) in rows" :key="index" ref="tableRows">
-                    <th scope="row">{{ row.id }}</th>
+                    <th scope="row" style="display: none;">{{ row.id }}</th>
                     <td> {{row.title}}</td>
-                    <td> {{ row.year }}</td>
                     <td> {{row.createDt}}</td>
                 </tr>
             </tbody>
@@ -16,6 +15,7 @@
 import {nextTick, onMounted, ref} from 'vue'
 import { getCollection, getDocumentsByOrdering, getDocumentsByQuery } from '../../firebase/firestore'
 import  Constant  from '../../constant.js'
+import {formatterForDatetime} from '../../utility.js'
 
 const rows = ref([])
 const tableRows = ref([])
@@ -30,6 +30,7 @@ onMounted( async ()=>{
         querySnapshot.forEach((doc) => {
             let obj = doc.data();
             obj.id = doc.id;
+            obj.createDt = formatterForDatetime(new Date(obj.createDt))
             rows.value.push(obj);
         })
 
