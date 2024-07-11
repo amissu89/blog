@@ -8,6 +8,7 @@ import ProfilePage from './components/profile/ProfilePage.vue'
 import MainPage from './components/MainPage.vue'
 import SignInPage from './components/auth/SignInPage.vue'
 import SignUpPage from './components/auth/SignUpPage.vue'
+import ViewPage from './components/post/ViewPage.vue'
 
 const routes = [
     { 
@@ -37,6 +38,12 @@ const routes = [
     {
         path: '/sign-up',
         component: SignUpPage,
+    },
+    {
+        path: '/view/:id',
+        name: 'viewer',
+        component: ViewPage,
+        props: true,
     },
     { 
         path: '/', 

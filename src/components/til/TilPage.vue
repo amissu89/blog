@@ -4,8 +4,8 @@
             <tbody>
                 <tr v-for="(row, index) in rows" :key="index" ref="tableRows">
                     <th scope="row" style="display: none;">{{ row.id }}</th>
-                    <td> {{row.title}}</td>
-                    <td> {{row.createDt}}</td>
+                    <td @click="loadPost(row.id)"> {{row.title}}</td>
+                    <td style="text-align:right;"> {{row.createDt}}</td>
                 </tr>
             </tbody>
         </table>
@@ -13,12 +13,14 @@
 </template>
 <script setup>
 import {nextTick, onMounted, ref} from 'vue'
+import { useRouter} from 'vue-router'
 import { getCollection, getDocumentsByOrdering, getDocumentsByQuery } from '../../firebase/firestore'
 import  Constant  from '../../constant.js'
 import {formatterForDatetime} from '../../utility.js'
 
 const rows = ref([])
 const tableRows = ref([])
+const router = useRouter()
 
 onMounted( async ()=>{
 
@@ -33,8 +35,6 @@ onMounted( async ()=>{
             obj.createDt = formatterForDatetime(new Date(obj.createDt))
             rows.value.push(obj);
         })
-
-        console.log(rows)
     }
 
     await fetchItems()
@@ -53,11 +53,22 @@ onMounted( async ()=>{
     })
 })
 
+const loadPost = (postId) =>{
+    router.push({
+        name: 'viewer',
+        params: {
+            id : postId
+        }
+    })
+}
+
 
 </script>
 
 
 
 <style scoped>
-
+.table tr:hover{
+    cursor:pointer;
+}
 </style>
