@@ -28,5 +28,6 @@
   <style scoped>
   .tui-border{
     margin: 3vh 0 0 0;
+    height: 50vh;
   }
   </style>
