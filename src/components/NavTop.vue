@@ -12,17 +12,25 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"   v-for="(link, index) in filteredLinks" :key="index">
-                        <router-link :to=link.to class="nav-link" >
-                            <button v-if="link.to !== '#'" type="button" class="btn btn-outline-dark">{{ link.title }}</button> 
+                    <li class="nav-item" v-for="(link, index) in filteredLinks" :key="index">
+                        <router-link :to=link.to class="nav-link">
+                            <button v-if="link.to !== '#'" 
+                                type="button" 
+                                class="btn btn-outline-dark">
+                                {{ link.title}}
+                            </button>
                             <button v-else type="button" class="btn btn-outline-dark" @click="signOut"> Logout </button>
                         </router-link>
-                        
                     </li>
                 </ul>
+                
             </div>
+
         </div>
+
+
     </nav>
+    <!-- <hr style="border: 1px solid black;"> -->
 </template>
 <script setup>
 import { ref, onMounted, computed } from 'vue'
@@ -48,13 +56,8 @@ const links = ref(
             visible: true
         },
         {
-            to: '/diary',
-            title: 'Diary',
-            visible: true
-        },
-        {
             to: '/profile',
-            title: 'Profile',
+            title: 'Career',
             visible: true
         },
         {
@@ -71,29 +74,27 @@ const links = ref(
 )
 
 const userAuthenticated = ref(false)
-const filteredLinks = computed( () => {
-    return links.value.filter( link =>{
+const filteredLinks = computed(() => {
+    return links.value.filter(link => {
         return link.visible == true || userAuthenticated.value
     })
 })
 
-onMounted( async() =>{
-    observeAuthState( (user) =>{
-        if(user){
+onMounted(async () => {
+    observeAuthState((user) => {
+        if (user) {
             userAuthenticated.value = true
         }
     })
 })
 
-const signOut = () =>{
-    logout().then( ()=>{
+const signOut = () => {
+    logout().then(() => {
         userAuthenticated.value = false
         router.push('/main')
-    }).catch( error =>{
+    }).catch(error => {
         console.error(`Logout failed : ${error}`)
     })
 }
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

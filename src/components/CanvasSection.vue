@@ -13,5 +13,6 @@ export default {
 <style scoped>
 .container{
     height: 80vh;
+    padding-top: 5vh;
 }    
 </style>
