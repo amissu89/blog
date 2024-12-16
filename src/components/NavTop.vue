@@ -52,7 +52,7 @@ const links = ref(
         },
         {
             to: '/til',
-            title: 'TIL;',
+            title: 'Posts',
             visible: true
         },
         {

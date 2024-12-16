@@ -4,9 +4,9 @@
 }
 
 body {
-    font-family: 'Nanum Myeongjo', serif;
+    /* font-family: 'Nanum Myeongjo', serif; */
     font-weight: 600;
-}
+}   
 
 .btn {
     border-radius: 0;
