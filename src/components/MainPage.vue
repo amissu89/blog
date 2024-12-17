@@ -2,7 +2,7 @@
     <div class="row"> 
         <div class="col-4"> 
             <div class="circle-image">
-                <img alt="profile image" src="../assets/profile.jpeg" />
+                <img alt="profile image" src="../assets/profile.jpg" />
             </div>
         </div>
 

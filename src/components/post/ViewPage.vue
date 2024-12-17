@@ -11,7 +11,7 @@
             </p>
             <ToastViewer :content="content.content"/>
 
-            <button type="button" class="btn btn-outline-dark" @click="goRoute">목록으로</button>
+            <button type="button" class="btn btn-outline-dark" @click="$router.go(-1)">목록으로</button>
         </div>
         
     </div>
@@ -64,6 +64,7 @@ onMounted( async() =>{
     }
 
 })
+
 
 </script>
 
