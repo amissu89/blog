@@ -1,7 +1,7 @@
 // src/router.js
 import { createRouter, createWebHistory } from 'vue-router'
 import AboutPage from './components/about/AboutPage.vue'
-import TilPage from './components/til/TilPage.vue'
+import PostsPage from './components/til/TilPage.vue'
 import PostingPage from './components/post/PostingPage.vue'
 import ProfilePage from './components/profile/ProfilePage.vue'
 import MainPage from './components/MainPage.vue'
@@ -15,8 +15,8 @@ const routes = [
         component: AboutPage 
     },
     { 
-        path: '/til', 
-        component: TilPage 
+        path: '/posts', 
+        component: PostsPage 
     },
     { 
         path: '/profile', 

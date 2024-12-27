@@ -51,7 +51,7 @@ const links = ref(
             visible: true
         },
         {
-            to: '/til',
+            to: '/posts',
             title: 'Posts',
             visible: true
         },

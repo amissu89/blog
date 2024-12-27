@@ -134,7 +134,7 @@ const savePost = async () => {
     const postContent = await setContentData(docMetaId)
     await setDocument(Constant.TIL_BOARD_CONTENT, docMetaId, postContent);
 
-    router.push("/til")
+    router.push("/posts")
     
   } catch (error) {
     console.error("Error saving post: ", error)
