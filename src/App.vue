@@ -1,9 +1,15 @@
 <template>
   <div class="container">
+    <div class="d-flex flex-column min-vh-100">
     <NavTop />
-    <Canvas />
+    <div class="flex-grow-1">
+      <Canvas />
+    </div>
+    
     <Footer />
   </div>
+  </div>
+  
 </template>
 
 <script> 

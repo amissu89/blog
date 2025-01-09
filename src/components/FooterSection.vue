@@ -1,11 +1,8 @@
 <template lang="">
-    <div class="container">
-        <div class="row">
-            <div class="col"> 
-                <p> &copy; Lee yonglim | All Rights Reserved </p>
-            </div>
+    <div class="row">
+        <div class="col"> 
+            <p> &copy; Lee yonglim | All Rights Reserved </p>
         </div>
-
     </div>
 </template>
 <script>

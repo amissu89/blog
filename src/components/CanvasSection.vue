@@ -1,7 +1,5 @@
 <template lang="">
-    <div class="container">
-       <router-view> </router-view>
-    </div>
+    <router-view> </router-view>    
 </template>
 <script>
 
@@ -11,8 +9,5 @@ export default {
 }
 </script>
 <style scoped>
-.container{
-    height: 80vh;
-    padding-top: 5vh;
-}    
+
 </style>

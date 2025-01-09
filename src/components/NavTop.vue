@@ -97,4 +97,8 @@ const signOut = () => {
     })
 }
 </script>
-<style scoped></style>
+<style scoped>
+    .navbar {
+        background-color:white;
+    }
+</style>
