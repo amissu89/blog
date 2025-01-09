@@ -7,7 +7,7 @@
         </div>
 
         <div class="col-8">
-            <h5> <b> 이용림 Lee Yonglim🌿  (Rokhee)</b></h5>
+            <h5> <b> 이용림 Lee Yonglim🌿  (Brooks)</b></h5>
             <br/>
             <quote> Let's be better than yesterday. </quote>
             <br/>
