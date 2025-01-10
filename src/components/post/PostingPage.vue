@@ -1,42 +1,50 @@
 <template>
-    <div class="container">
-        <div class="mb-3">
-            <label for="post-title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="post-title" v-model="postTitle" />
-        </div>
+  <div class="container">
 
-        <ToastEditor v-model="content" @add-image="addImage" @update:modelValue="updateContent" />
+    <!--<div class="mb-3">
+      <label for="category" class="form-label">Category</label>
+      <input type="text" class="form-control" id="category" v-model="postCategory" />
+    </div> -->
 
-        <div class="mb-3">
-            <label for="post-tag" class="form-label">Tags</label>
-            <input type="text" class="form-control" id="post-tag" v-model="postTag" />
-        </div>
+    <label for="post-category" class="form-label">Category</label>
+    <select id="post-category" class="form-select" aria-label="Default select example" v-model="category">
+      <option value="daily">Daily</option>
+      <option value="work">Work</option>
+      <option value="review">Review</option>
+    </select>
 
-        <div class="buttons">
-          <button type="button" class="btn btn-outline-dark" @click="getTagData()">tag</button>
-            <button type="button" class="btn btn-outline-dark" @click="savePost()">
-              
-              <span v-if="saving">
-                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                  <span ref="saveBtn" role="status">저장 중...</span>
-              </span>
-              <span v-if="!saving">저장</span>
-            </button>
-            <button type="button" class="btn btn-outline-dark" @click="$router.go(-1)">
-                취소
-            </button>
-        </div>
+    <div class="mb-3">
+      <label for="post-title" class="form-label">Title</label>
+      <input type="text" class="form-control" id="post-title" v-model="postTitle" />
     </div>
+
+    <ToastEditor v-model="content" @add-image="addImage" @update:modelValue="updateContent" />
+
+
+    <div class="buttons">
+      <button type="button" class="btn btn-outline-dark" @click="savePost()">
+
+        <span v-if="saving">
+          <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+          <span ref="saveBtn" role="status">저장 중...</span>
+        </span>
+        <span v-if="!saving">저장</span>
+      </button>
+      <button type="button" class="btn btn-outline-dark" @click="$router.go(-1)">
+        취소
+      </button>
+    </div>
+  </div>
 </template>
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ToastEditor from "../toast/ToastEditor.vue"
 import Constant from "../../constant.js"
-import {getRandomString} from "../../utility.js"
+import { getRandomString } from "../../utility.js"
 import { observeAuthState } from '../../firebase/auth.js'
-import { addDocument, setDocument, getDocument, updateDocument } from '../../firebase/firestore.js'
-import { uploadFile, getUrl} from '../../firebase/firestorage.js'
+import { addDocument, setDocument, getDocument} from '../../firebase/firestore.js'
+import { uploadFile, getUrl } from '../../firebase/firestorage.js'
 import PostMeta from "../../models/post-meta.js"
 import PostContent from "../../models/post-content.js"
 
@@ -44,6 +52,7 @@ const router = useRouter()
 const route = useRoute()
 
 const postTitle = ref("")
+const category = ref("")
 const content = ref("<p>내용을 작성하세요</p>")
 const images = ref([])
 const loading = ref(false)
@@ -51,10 +60,9 @@ const id = ref(route.params.id ? route.params.id : "")
 const saving = ref(false)
 const userUid = ref("")
 const randomValue = ref("")
-const postTag = ref("")
 
-const BOARD_META = Constant.TIL_BOARD_META
-const BOARD_CONTENT = Constant.TIL_BOARD_CONTENT
+const BOARD_INFO = Constant.BOARD_INFO
+const BOARD_CONTENT = Constant.BOARD_CONTENT
 
 onMounted(async () => {
   randomValue.value = getRandomString()
@@ -73,7 +81,7 @@ onMounted(async () => {
   if (id.value !== "") {
     console.log('loading the existed posting data...')
     try {
-        const docSnapshot = await getDocument(BOARD_META, id.value);
+      const docSnapshot = await getDocument(BOARD_INFO, id.value);
       if (docSnapshot.exists()) {
         const meta = docSnapshot.data();
 
@@ -129,13 +137,13 @@ const savePost = async () => {
     const postMeta = await setMetaData(userUid.value)
 
     // Now, you can proceed to save the data to Firestore
-    const docMetaId = await addDocument(Constant.TIL_BOARD_META, postMeta)
+    const docMetaId = await addDocument(Constant.BOARD_INFO, postMeta)
     console.log(docMetaId)
     const postContent = await setContentData(docMetaId)
-    await setDocument(Constant.TIL_BOARD_CONTENT, docMetaId, postContent);
+    await setDocument(Constant.BOARD_CONTENT, docMetaId, postContent);
 
     router.push("/posts")
-    
+
   } catch (error) {
     console.error("Error saving post: ", error)
   } finally {
@@ -149,7 +157,7 @@ const setMetaData = async (uid) => {
   meta.createDt = new Date().toISOString();
   meta.hit = 0;
   meta.user = uid;
-  meta.tags = await getTagData()
+  meta.category = category.value;
   return meta;
 }
 
@@ -162,30 +170,9 @@ const setContentData = async (docId) => {
   return data;
 }
 
-const getTagData = async () => {
-  const currentTagList = postTag.value.split('#').filter( tag => tag !== '')
-
-  const snapshot = await getDocument(Constant.FILTER_COLLECTION, Constant.TAG_FILTER)
-  if (snapshot.exists) {
-    const oldTagList = snapshot.data().tagList
-    
-    const setTags = new Set()
-    oldTagList.forEach( tag => setTags.add(tag))
-    currentTagList.forEach( tag => setTags.add(tag))
-
-    const tagArray = Array.from(setTags)
-
-    await updateDocument(Constant.FILTER_COLLECTION, Constant.TAG_FILTER, {tagList : tagArray})
-    
-  }
-
-  return currentTagList
-
-}
-
 </script>
 <style scoped>
-.mb-3{
+.mb-3 {
   margin-top: 1vh;
 }
 </style>

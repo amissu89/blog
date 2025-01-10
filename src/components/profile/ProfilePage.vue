@@ -173,9 +173,15 @@ export default {
 }
 </script>
 <style scoped>
-.company > h3 {
-    background-color:black;
-    color:white;
-    padding:10px;
+.company>h3 {
+    background-color: black;
+    color: white;
+    padding: 10px;
+}
+
+.project-name {
+    background-color: gray;
+    color: white;
+    padding: 10px;
 }
 </style>

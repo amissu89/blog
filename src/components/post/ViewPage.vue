@@ -45,11 +45,11 @@ onMounted( async() =>{
     try{
         id.value = route.params.id
 
-        const docSnapshot = await getDocument(Constant.TIL_BOARD_META, id.value)
+        const docSnapshot = await getDocument(Constant.BOARD_INFO, id.value)
         if (docSnapshot.exists()) {
         meta.value = docSnapshot.data()
 
-        const contentSnapshot = await getDocument(Constant.TIL_BOARD_CONTENT, id.value)
+        const contentSnapshot = await getDocument(Constant.BOARD_CONTENT, id.value)
         if(contentSnapshot.exists()){
             content.value = contentSnapshot.data()
         }

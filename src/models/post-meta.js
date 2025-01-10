@@ -1,6 +1,6 @@
 const PostMeta = {
-    tags: [],
     title: 'title',
+    category: '',
     user: '',
     createDt: null,
     updateDt: null,

@@ -25,7 +25,7 @@ const router = useRouter()
 onMounted( async ()=>{
 
     const fetchItems = async() =>{
-        const collection = getCollection(Constant.TIL_BOARD_META)
+        const collection = getCollection(Constant.BOARD_INFO)
         const q = getDocumentsByOrdering( collection, "createDt", Constant.DESC)
         const querySnapshot = await getDocumentsByQuery(q);
 
