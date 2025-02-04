@@ -1,11 +1,6 @@
 <template>
   <div class="container">
 
-    <!--<div class="mb-3">
-      <label for="category" class="form-label">Category</label>
-      <input type="text" class="form-control" id="category" v-model="postCategory" />
-    </div> -->
-
     <label for="post-category" class="form-label">Category</label>
     <select id="post-category" class="form-select" aria-label="Default select example" v-model="category">
       <option value="daily">Daily</option>
@@ -87,11 +82,12 @@ onMounted(async () => {
 
         //제목
         postTitle.value = meta.title
+        category.value = meta.category
 
         const contentSnapshot = await getDocument(BOARD_CONTENT, id.value);
         if (contentSnapshot.exists()) {
           const detail = contentSnapshot.data();
-          updateContent(detail.content.value)
+          updateContent(detail.content)
         }
       } else {
         // docSnap.data() will be undefined in this case
@@ -127,7 +123,9 @@ const addImage = async (blob, callback) => {
 
 
 const updateContent = (newContent) => {
+  
   content.value = newContent
+  console.log(content.value)
 }
 
 const savePost = async () => {

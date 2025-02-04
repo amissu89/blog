@@ -17,7 +17,6 @@
   
     viewer = new Viewer({
       el: viewerRef.value,
-      height: "600px",
       initialValue: props.content,
     });
   
@@ -28,6 +27,7 @@
   <style scoped>
   .tui-border{
     margin: 3vh 0 0 0;
-    height: 50vh;
+    height: auto;
+    min-height:50vh;
   }
   </style>

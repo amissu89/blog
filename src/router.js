@@ -1,7 +1,7 @@
 // src/router.js
 import { createRouter, createWebHistory } from 'vue-router'
 import AboutPage from './components/about/AboutPage.vue'
-import PostsPage from './components/til/TilPage.vue'
+import PostsPage from './components/post/PostList.vue'
 import PostingPage from './components/post/PostingPage.vue'
 import ProfilePage from './components/profile/ProfilePage.vue'
 import MainPage from './components/MainPage.vue'
@@ -25,6 +25,12 @@ const routes = [
     {
         path: '/posting',
         component: PostingPage,
+    },
+    {
+        path: '/edit/:id',
+        name: 'edit-post',
+        component: PostingPage,
+        props:true,
     },
     {
         path: '/sign-in',

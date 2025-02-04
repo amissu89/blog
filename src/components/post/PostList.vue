@@ -4,6 +4,7 @@
             <tbody>
                 <tr v-for="(row, index) in rows" :key="index" ref="tableRows">
                     <th scope="row" style="display: none;">{{ row.id }}</th>
+                    <td> [ {{ row.category }} ] </td>
                     <td @click="loadPost(row.id)"> {{row.title}}</td>
                     <td style="text-align:right;"> {{row.createDt}}</td>
                 </tr>
@@ -11,7 +12,9 @@
         </table>
     </div>
 </template>
+
 <script setup>
+
 import {nextTick, onMounted, ref} from 'vue'
 import { useRouter} from 'vue-router'
 import { getCollection, getDocumentsByOrdering, getDocumentsByQuery } from '../../firebase/firestore'
