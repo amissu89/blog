@@ -1,12 +1,14 @@
 <template lang="">
     <div class="row"> 
-        <div class="col-4"> 
+        <!-- 프로필 이미지 -->
+        <div class="col-12 col-md-4 text-center"> 
             <div class="circle-image">
                 <img alt="profile image" src="../assets/profile.jpg" />
             </div>
         </div>
-
-        <div class="col-8">
+        
+        <!-- 설명글 -->
+        <div class="col-12 col-md-8 description">
             <h5> <b> 이용림 Yonglim Lee🌿</b></h5>
             <br/>
             <quote> Let's be better than yesterday. </quote>
@@ -62,6 +64,9 @@ const copyMail = (email) => {
     height: 200px;
     border-radius: 50%;
     overflow: hidden;
+    margin:auto;
+    margin-top : 3vh;
+    margin-bottom:3vh;
     /* 이미지가 영역을 넘어가지 않게 */
 }
 
@@ -90,4 +95,11 @@ ul {
     padding: 0; /* 기본 여백 제거 */
     margin: 0; /* 기본 여백 제거 */
 }
+
+@media (min-width: 768px) {
+    .description {
+        margin-top: 3vh;
+    }
+}
+
 </style>
