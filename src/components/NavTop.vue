@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar sticky-top navbar-expand-lg">
         <div class="container-fluid">
-            <a href="#" class="navbar-brand">Archaiving</a>
+            <a href="#" class="navbar-brand">Archaiving🌿</a>
 
             <!--모바일버전일때 메뉴 버튼-->
             <!-- <button class="navbar-toggler" type="button" 

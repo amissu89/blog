@@ -9,7 +9,7 @@
         
         <!-- 설명글 -->
         <div class="col-12 col-md-8 description">
-            <h5> <b> 이용림 Yonglim Lee🌿</b></h5>
+            <h5> <b> 이용림 Yonglim Lee</b></h5>
             <br/>
             <quote> Let's be better than yesterday. </quote>
             <br/>
