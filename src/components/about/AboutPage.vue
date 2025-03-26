@@ -1,5 +1,14 @@
 <template lang="">
     <div>
+
+
+        <div class="row">
+            <h3>Language</h3>
+            <p>
+                OPIc, IM - 3, 2020.02 <br/>
+            </p>
+        </div>
+
         <div class="row">
             <h3>Education</h3>
             <p>
@@ -33,6 +42,11 @@ export default {
     
 }
 </script>
-<style lang="">
-    
+<style scoped>
+.row > h3 {
+    background-color: black;
+    color: white;
+    padding: 10px;
+}
+
 </style>
