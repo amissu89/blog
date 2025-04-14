@@ -11,18 +11,18 @@
             </p>
             <ToastViewer :content="content.content"/>
 
-            <button type="button" class="btn btn-outline-dark" @click="$router.go(-1)">목록으로</button>
+            <button type="button" class="btn btn-outline-dark float-right" @click="$router.go(-1)">목록으로</button>
         </div>
         
     </div>
 </template>
 
 <script setup>
-import { useRoute, useRouter} from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
-import {getDocument, deleteDocument} from '../../firebase/firestore'
+import { getDocument, deleteDocument } from '../../firebase/firestore'
 import { observeAuthState } from '../../firebase/auth'
-import  Constant from '../../constant.js'
+import Constant from '../../constant.js'
 import ToastViewer from '../toast/ToastViewer.vue'
 
 const route = useRoute()
@@ -34,66 +34,75 @@ const content = ref('')
 const loading = ref(true)
 const adminMode = ref(false)
 
-onMounted( async() =>{
-
-    observeAuthState( async() => {
-        observeAuthState( (user) =>{
-            if(user){
-                adminMode.value = true
-            }
-        })
+onMounted(async () => {
+    // Observe authentication state and set admin mode if user is logged in
+    observeAuthState((user) => {
+        if (user) {
+            adminMode.value = true
+        }
     })
-    try{
+
+    try {
         id.value = route.params.id
 
+        // Fetch meta information
         const docSnapshot = await getDocument(Constant.BOARD_INFO, id.value)
         if (docSnapshot.exists()) {
-        meta.value = docSnapshot.data()
+            meta.value = docSnapshot.data()
 
-        const contentSnapshot = await getDocument(Constant.BOARD_CONTENT, id.value)
-        if(contentSnapshot.exists()){
-            content.value = contentSnapshot.data()
-        }
+            // Fetch content information
+            const contentSnapshot = await getDocument(Constant.BOARD_CONTENT, id.value)
+            if (contentSnapshot.exists()) {
+                content.value = contentSnapshot.data()
+            }
         } else {
             console.log('No such document')
         }
-    }
-    catch(error){
-        console.error("Error fetching document : " , error)
+    } catch (error) {
+        console.error("Error fetching document: ", error)
     } finally {
         loading.value = false
     }
-
 })
 
+// Navigate to edit mode with parameters
 const editMode = (id) => {
-    console.log(id)
-    router.push({
-        name: 'edit-post',
-        params: {
-            id : id
-        }
-    })
-}
-
-const deleteMode = async (id) => {
-    console.log(id)
-    const isConfirmed = window.confirm("이 글을 삭제하시겠습니까?")
-    if (isConfirmed) {
-        //컨텐츠 삭제
-        await deleteDocument(Constant.BOARD_CONTENT, id)
-        //메타 정보 삭제
-        await deleteDocument(Constant.BOARD_INFO, id)
-
-        router.go(-1)
+    try {
+        router.push({
+            name: 'edit-post',
+            params: {
+                id: id,
+                mode: 'edit',
+            }
+        })
+    } catch (error) {
+        console.error("Error navigating to edit mode: ", error)
     }
 }
 
+// Delete the post after confirmation
+const deleteMode = async (id) => {
+    const isConfirmed = window.confirm("이 글을 삭제하시겠습니까?")
+    if (isConfirmed) {
+        try {
+            // Delete content
+            await deleteDocument(Constant.BOARD_CONTENT, id)
+            // Delete meta information
+            await deleteDocument(Constant.BOARD_INFO, id)
 
+            router.go(-1)
+        } catch (error) {
+            console.error("Error deleting document: ", error)
+        }
+    }
+}
 </script>
 
 <style scoped>
     .container{
         margin-top: 2vh;
+    }
+    .float-right {
+        float: right;
     }
 </style>

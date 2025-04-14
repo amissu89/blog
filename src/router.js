@@ -1,54 +1,49 @@
 // src/router.js
 import { createRouter, createWebHistory } from 'vue-router'
-import AboutPage from './components/about/AboutPage.vue'
-import PostsPage from './components/post/PostList.vue'
-import PostingPage from './components/post/PostingPage.vue'
-import ProfilePage from './components/profile/ProfilePage.vue'
-import MainPage from './components/MainPage.vue'
-import SignInPage from './components/auth/SignInPage.vue'
-import SignUpPage from './components/auth/SignUpPage.vue'
-import ViewPage from './components/post/ViewPage.vue'
 
 const routes = [
     { 
         path: '/about', 
-        component: AboutPage 
+        component: () => import('./components/about/AboutPage.vue') 
     },
     { 
         path: '/posts', 
-        component: PostsPage 
+        component: () => import('./components/post/PostList.vue') 
     },
     { 
         path: '/profile', 
-        component: ProfilePage 
+        component: () => import('./components/profile/ProfilePage.vue'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/posting',
-        component: PostingPage,
+        component: () => import('./components/post/PostingPage.vue'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/edit/:id',
         name: 'edit-post',
-        component: PostingPage,
-        props:true,
+        component: () => import('./components/post/PostingPage.vue'),
+        props: true,
+        meta: { requiresAuth: true }
     },
     {
         path: '/sign-in',
-        component: SignInPage,
+        component: () => import('./components/auth/SignInPage.vue')
     },
     {
         path: '/sign-up',
-        component: SignUpPage,
+        component: () => import('./components/auth/SignUpPage.vue')
     },
     {
         path: '/view/:id',
         name: 'viewer',
-        component: ViewPage,
-        props: true,
+        component: () => import('./components/post/ViewPage.vue'),
+        props: true
     },
     { 
         path: '/', 
-        component: MainPage 
+        component: () => import('./components/MainPage.vue') 
     }
 ]
 
@@ -56,5 +51,14 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 })
+
+router.beforeEach((to, from, next) => {
+    const isAuthenticated = !!localStorage.getItem('authToken'); // Example: Check if user is logged in
+    if (to.meta.requiresAuth && !isAuthenticated) {
+        next('/sign-in'); // Redirect to sign-in page if not authenticated
+    } else {
+        next(); // Proceed to the route
+    }
+});
 
 export default router;
