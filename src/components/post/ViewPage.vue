@@ -72,7 +72,7 @@ const editMode = (id) => {
             name: 'edit-post',
             params: {
                 id: id,
-                mode: 'edit',
+                edit: "true",
             }
         })
     } catch (error) {
