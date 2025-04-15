@@ -71,9 +71,11 @@ const editMode = (id) => {
         router.push({
             name: 'edit-post',
             params: {
-                id: id,
-                edit: "true",
-            }
+                id: id.value,
+            },
+            query: {
+                edit: true,
+            },
         })
     } catch (error) {
         console.error("Error navigating to edit mode: ", error)
@@ -82,10 +84,12 @@ const editMode = (id) => {
 
 // Delete the post after confirmation
 const deleteMode = async (id) => {
+    console.log("Deleting meta with ID: ", id)
     const isConfirmed = window.confirm("이 글을 삭제하시겠습니까?")
     if (isConfirmed) {
         try {
             // Delete content
+            
             await deleteDocument(Constant.BOARD_CONTENT, id)
             // Delete meta information
             await deleteDocument(Constant.BOARD_INFO, id)

@@ -28,16 +28,16 @@ const router = useRouter()
 onMounted( async ()=>{
 
     const fetchItems = async() =>{
-        const collection = getCollection(Constant.BOARD_INFO)
-        const q = getDocumentsByOrdering( collection, "createDt", Constant.DESC)
-        const querySnapshot = await getDocumentsByQuery(q);
+    const collection = getCollection(Constant.BOARD_INFO)
+    const q = getDocumentsByOrdering( collection, "createDt", Constant.DESC)
+    const querySnapshot = await getDocumentsByQuery(q);
 
-        querySnapshot.forEach((doc) => {
-            let obj = doc.data();
-            obj.id = doc.id;
-            obj.createDt = formatterForDatetime(new Date(obj.createDt))
-            rows.value.push(obj);
-        })
+    querySnapshot.forEach((doc) => {
+        let obj = doc.data();
+        obj.id = doc.id;
+        obj.createDt = formatterForDatetime(new Date(obj.createDt))
+        rows.value.push(obj);
+    })
     }
 
     await fetchItems()

@@ -34,7 +34,7 @@ import ToastEditor from "../toast/ToastEditor.vue";
 import Constant from "../../constant.js";
 import { getRandomString } from "../../utility.js";
 import { observeAuthState } from '../../firebase/auth.js';
-import { addDocument, setDocument, getDocument } from '../../firebase/firestore.js';
+import { addDocument, setDocument, getDocument, updateDocument } from '../../firebase/firestore.js';
 import { uploadFile, getUrl } from '../../firebase/firestorage.js';
 import PostMeta from "../../models/post-meta.js";
 import PostContent from "../../models/post-content.js";
@@ -48,6 +48,7 @@ const content = ref("<p>내용을 작성하세요</p>");
 const images = ref([]);
 const loading = ref(false);
 const id = ref(route.params.id || "");
+const editMode = ref(route.query.edit === "true");
 const saving = ref(false);
 const userUid = ref("");
 const randomValue = ref("");
@@ -59,6 +60,9 @@ onMounted(() => {
   randomValue.value = getRandomString();
   observeAuthState(user => (user ? (userUid.value = user.uid) : console.log('No user')));
   if (id.value) loadPostData();
+
+  console.log(id.value);
+  console.log(editMode.value);
 });
 
 const loadPostData = async () => {
@@ -106,12 +110,24 @@ const updateContent = newContent => {
 const savePost = async () => {
   try {
     saving.value = true;
-
+    if (!postTitle.value || !content.value) {
+      alert("제목과 내용을 입력하세요.");
+      return;
+    }
+    
+    console.log(route.query.edit)
     const postMeta = createMetaData(userUid.value);
-    const docMetaId = await addDocument(BOARD_INFO, postMeta);
+    const postContent = createContentData(id.value || "");
 
-    const postContent = createContentData(docMetaId);
-    await setDocument(BOARD_CONTENT, docMetaId, postContent);
+    if (editMode.value) {
+      // Update existing document
+      await updateDocument(BOARD_INFO, id.value, postMeta);
+      await updateDocument(BOARD_CONTENT, id.value, postContent);
+    } else {
+      // Create new document
+      const docMetaId = await addDocument(BOARD_INFO, postMeta);
+      await setDocument(BOARD_CONTENT, docMetaId, postContent);
+    }
 
     router.push("/posts");
   } catch (error) {

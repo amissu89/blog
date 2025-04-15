@@ -17,14 +17,12 @@ const routes = [
     {
         path: '/posting',
         component: () => import('./components/post/PostingPage.vue'),
-        meta: { requiresAuth: true }
     },
     {
         path: '/edit/:id',
         name: 'edit-post',
         component: () => import('./components/post/PostingPage.vue'),
         props: true,
-        meta: { requiresAuth: true }
     },
     {
         path: '/sign-in',
