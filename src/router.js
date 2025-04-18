@@ -2,6 +2,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
+
+    { 
+        path: '/', 
+        component: () => import('./components/MainPage.vue') 
+    },
     { 
         path: '/about', 
         component: () => import('./components/about/AboutPage.vue') 
@@ -38,10 +43,6 @@ const routes = [
         component: () => import('./components/post/ViewPage.vue'),
         props: true
     },
-    { 
-        path: '/', 
-        component: () => import('./components/MainPage.vue') 
-    }
 ]
 
 const router = createRouter({
