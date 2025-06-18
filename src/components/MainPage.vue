@@ -3,7 +3,7 @@
         <!-- 프로필 이미지 -->
         <div class="col-12 col-md-4 text-center"> 
             <div class="circle-image">
-                <img alt="profile image" src="../assets/profile.jpg" />
+                <img alt="profile image" src="../assets/profile.png" />
             </div>
         </div>
         
@@ -59,41 +59,83 @@ const copyMail = (email) => {
 
 </script>
 <style scoped>
+.row {
+    background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 40px auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    max-width: 960px;
+}
+
+.description h5 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2B2B2B;
+}
+
+.description quote {
+    font-style: italic;
+    color: #666;
+    font-size: 1rem;
+}
+
+.description p {
+    font-size: 0.95rem;
+    color: #444;
+    line-height: 1.6;
+}
+
+.description h5:not(:first-of-type) {
+    margin-top: 24px;
+    font-weight: 600;
+    color: #2E2E2E;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul li {
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    color: #2B2B2B;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+a {
+    text-decoration: none;
+    color: #2B2B2B;
+}
+
+a:hover {
+    font-weight: 600;
+    color: #FF5722;
+    text-decoration: underline;
+}
+
 .circle-image {
-    width: 200px;
-    height: 200px;
+    width: 240px;
+    height: 240px;
     border-radius: 50%;
     overflow: hidden;
-    margin:auto;
-    margin-top : 3vh;
-    margin-bottom:3vh;
-    /* 이미지가 영역을 넘어가지 않게 */
+    margin: auto;
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+    border: 4px solid #f4f4f5;
 }
 
 .circle-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* 이미지 비율을 유지하며 잘라내기 */
-    filter: grayscale(100%);
-    /* 이미지를 흑백으로 만듦 */
-}
-
-a {
-    text-decoration: none;
-    color: black;
-}
-
-a:hover {
-    text-decoration: none;
-    font-weight: bold;
-    color:orangered;
-}
-
-ul {
-    list-style-type: none; /* 점 제거 */
-    padding: 0; /* 기본 여백 제거 */
-    margin: 0; /* 기본 여백 제거 */
+    border-radius: 50%;
 }
 
 @media (min-width: 768px) {
@@ -101,5 +143,6 @@ ul {
         margin-top: 3vh;
     }
 }
+
 
 </style>

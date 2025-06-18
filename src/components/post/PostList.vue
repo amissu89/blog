@@ -4,7 +4,7 @@
             <tbody>
                 <tr v-for="(row, index) in rows" :key="index" ref="tableRows">
                     <th scope="row" style="display: none;">{{ row.id }}</th>
-                    <td> [ {{ row.category }} ] </td>
+                    <td class="category-cell"> [ {{ row.category }} ] </td>
                     <td @click="loadPost(row.id)"> {{row.title}}</td>
                     <td style="text-align:right;"> {{row.createDt}}</td>
                 </tr>
@@ -71,7 +71,67 @@ const loadPost = (postId) =>{
 
 
 <style scoped>
-.table tr:hover{
-    cursor:pointer;
+
+
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px;
 }
+
+.table tr {
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    transition: all 0.2s ease;
+}
+
+.table td {
+    padding: 16px 20px;
+    vertical-align: middle;
+    color: #2B2B2B;
+    border: none;
+}
+
+.table td:first-child {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #666;
+    width: 120px;
+}
+
+.table td:nth-child(2) {
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.table td:last-child {
+    font-size: 0.85rem;
+    color: #888;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.table tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .table td {
+        font-size: 0.9rem;
+        padding: 12px 14px;
+    }
+
+    .table td:first-child {
+        width: 90px;
+    }
+
+    .category-cell {
+        display: none;
+    }
+}
+
 </style>

@@ -43,10 +43,50 @@ export default {
 }
 </script>
 <style scoped>
+body {
+    background-color: #F4F4F5;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #2B2B2B;
+}
+
+.row {
+    background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 32px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
 .row > h3 {
-    background-color: black;
-    color: white;
-    padding: 10px;
+    background-color: #2E2E2E;
+    color: #FFFFFF;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.row > p {
+    font-size: 0.95rem;
+    color: #444444;
+    line-height: 1.6;
+}
+
+.row > ul {
+    margin-left: 20px;
+    color: #333333;
+    line-height: 1.6;
+}
+
+.row > ul li {
+    margin-bottom: 16px;
+}
+
+.row > ul li b {
+    color: #2E2E2E;
+    font-weight: 600;
 }
 
 </style>
