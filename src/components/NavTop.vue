@@ -114,8 +114,58 @@ const signOut = () => {
     })
 }
 </script>
+
 <style scoped>
-    .navbar {
-        background-color:white;
-    }
+.navbar {
+  background-color: white;
+}
+
+.collapse.navbar-collapse {
+  transition: max-height 0.3s ease-in-out;
+  overflow: hidden;
+  max-height: 0;
+}
+
+.collapse.navbar-collapse.show {
+  max-height: 500px;
+}
+
+ul.navbar-nav {
+  padding-left: 0;
+  margin-top: 0.5rem;
+}
+
+ul.navbar-nav li {
+  margin-bottom: 0.3rem;
+}
+
+ul.navbar-nav li .btn {
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0.5rem 1rem;
+  }
+
+  .navbar-nav {
+    width: 100%;
+  }
+
+  .navbar-nav .nav-link {
+    display: block;
+    width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  .collapse.navbar-collapse {
+    display: flex !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
 </style>

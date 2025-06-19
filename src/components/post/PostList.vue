@@ -5,8 +5,8 @@
                 <tr v-for="(row, index) in rows" :key="index" ref="tableRows">
                     <th scope="row" style="display: none;">{{ row.id }}</th>
                     <td class="category-cell"> [ {{ row.category }} ] </td>
-                    <td @click="loadPost(row.id)"> {{row.title}}</td>
-                    <td style="text-align:right;"> {{row.createDt}}</td>
+                    <td @click="loadPost(row.id)"> {{ row.title }}</td>
+                    <td style="text-align:right;"> {{ row.createDt }}</td>
                 </tr>
             </tbody>
         </table>
@@ -15,29 +15,29 @@
 
 <script setup>
 
-import {nextTick, onMounted, ref} from 'vue'
-import { useRouter} from 'vue-router'
+import { nextTick, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { getCollection, getDocumentsByOrdering, getDocumentsByQuery } from '../../firebase/firestore'
-import  Constant  from '../../constant.js'
-import {formatterForDatetime} from '../../utility.js'
+import Constant from '../../constant.js'
+import { formatterForDatetime } from '../../utility.js'
 
 const rows = ref([])
 const tableRows = ref([])
 const router = useRouter()
 
-onMounted( async ()=>{
+onMounted(async () => {
 
-    const fetchItems = async() =>{
-    const collection = getCollection(Constant.BOARD_INFO)
-    const q = getDocumentsByOrdering( collection, "createDt", Constant.DESC)
-    const querySnapshot = await getDocumentsByQuery(q);
+    const fetchItems = async () => {
+        const collection = getCollection(Constant.BOARD_INFO)
+        const q = getDocumentsByOrdering(collection, "createDt", Constant.DESC)
+        const querySnapshot = await getDocumentsByQuery(q);
 
-    querySnapshot.forEach((doc) => {
-        let obj = doc.data();
-        obj.id = doc.id;
-        obj.createDt = formatterForDatetime(new Date(obj.createDt))
-        rows.value.push(obj);
-    })
+        querySnapshot.forEach((doc) => {
+            let obj = doc.data();
+            obj.id = doc.id;
+            obj.createDt = formatterForDatetime(new Date(obj.createDt))
+            rows.value.push(obj);
+        })
     }
 
     await fetchItems()
@@ -56,11 +56,11 @@ onMounted( async ()=>{
     })
 })
 
-const loadPost = (postId) =>{
+const loadPost = (postId) => {
     router.push({
         name: 'viewer',
         params: {
-            id : postId
+            id: postId
         }
     })
 }
@@ -71,8 +71,6 @@ const loadPost = (postId) =>{
 
 
 <style scoped>
-
-
 .table {
     width: 100%;
     border-collapse: separate;
@@ -93,17 +91,14 @@ const loadPost = (postId) =>{
     border: none;
 }
 
-.table td:first-child {
+
+.table td:nth-child(2) {
     font-size: 0.9rem;
     font-weight: 500;
     color: #666;
     width: 120px;
-}
-
-.table td:nth-child(2) {
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
 }
 
 .table td:last-child {
@@ -111,12 +106,19 @@ const loadPost = (postId) =>{
     color: #888;
     text-align: right;
     white-space: nowrap;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
 .table tr:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
     cursor: pointer;
+}
+
+.table tr:hover td {
+    background-color: #000000;
+    color: #ffffff;
 }
 
 @media (max-width: 768px) {
@@ -132,6 +134,10 @@ const loadPost = (postId) =>{
     .category-cell {
         display: none;
     }
-}
 
+    .table td:nth-child(3) {
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+    }
+}
 </style>

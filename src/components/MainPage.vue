@@ -11,8 +11,13 @@
         <div class="col-12 col-md-8 description">
             <h5> <b> 이용림 Yonglim Lee</b></h5>
             <br/>
+            <quote> 어제보다 나은 내가 됩시다. </quote> <br/>
             <quote> Let's be better than yesterday. </quote>
             <br/>
+            <br/>
+            <p> 살면서 제일 중요한 것은 가족과 내 주변의 사람들과의 관계입니다.  <br/>
+                디지털 세계에서 일하지만 현실 세계의 관계들이 더욱 중요합니다. <br/>
+                일을 어떻게 하면 더 잘할지에 대해 항상 고민하고 있습니다.</p>
             <br/>
             <p> I think the most important thing in life is my family and relationships with people around me.  <br/>
                 I work in the digital world, but relationships in the real world are even more important. <br/>
