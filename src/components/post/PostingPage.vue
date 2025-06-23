@@ -36,8 +36,8 @@ import { getRandomString } from "../../utility.js";
 import { observeAuthState } from '../../firebase/auth.js';
 import { addDocument, setDocument, getDocument, updateDocument } from '../../firebase/firestore.js';
 import { uploadFile, getUrl } from '../../firebase/firestorage.js';
-import PostMeta from "../../models/post-meta.js";
-import PostContent from "../../models/post-content.js";
+import { createPostMeta } from "../../models/post-meta.js";
+import { createPostContent } from '@/models/post-content';
 import { useToast } from 'vue-toastification'
 
 const router = useRouter();
@@ -143,21 +143,34 @@ const savePost = async () => {
   }
 };
 
-const createMetaData = uid => ({
-  ...PostMeta,
+// const createMetaData = uid => ({
+//   ...PostMeta,
+//   title: postTitle.value,
+//   createDt: new Date().toISOString(),
+//   hit: 0,
+//   user: uid,
+//   category: category.value,
+// });
+
+const createMetaData = uid => createPostMeta({
   title: postTitle.value,
-  createDt: new Date().toISOString(),
-  hit: 0,
-  user: uid,
   category: category.value,
+  user: uid,
 });
 
-const createContentData = docId => ({
-  ...PostContent,
+
+// const createContentData = docId => ({
+//   ...PostContent,
+//   id: docId,
+//   content: content.value,
+//   images: [...images.value],
+// });
+
+const createContentData = docId => createPostContent({
   id: docId,
-  content: content.value,
-  images: [...images.value],
-});
+  content : content.value,
+  images : [...images.value],
+})
 </script>
 
 <style scoped>

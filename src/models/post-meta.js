@@ -1,10 +1,8 @@
-const PostMeta = {
-    title: '',
-    category: '',
-    user: '',
-    createDt: null,
+export const createPostMeta  = ({title = '', category = '', user =''} = {}) => ({
+    title, 
+    category,
+    user,
+    createDt : new Date().toISOString(),
     updateDt: null,
-    year: new Date(new Date().getFullYear(), 0, 1)  
-};
-
-export default PostMeta
+    year: new Date().getFullYear()
+});
