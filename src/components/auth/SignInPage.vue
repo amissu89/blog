@@ -21,14 +21,16 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { loginWithEmail } from '../../firebase/auth.js'
+import { useToast } from "vue-toastification"
 
 const email = ref('')
 const password = ref('')
 const router = useRouter()
+const toast = useToast()
 
 const login = async () => {
     if (!email.value || !password.value) {
-        alert('Please enter both email and password.')
+        toast.error('Please enter both email and password.')
         return
     }
 
@@ -39,7 +41,7 @@ const login = async () => {
         router.push('/')
     } catch (error) {
         console.error(`Login failed: ${error.message}`)
-        alert(`Login failed: ${error.message}`)
+        toast.error(`Login failed: ${error.message}`)
     }
 }
 </script>

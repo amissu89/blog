@@ -1,5 +1,5 @@
 const PostMeta = {
-    title: 'title',
+    title: '',
     category: '',
     user: '',
     createDt: null,

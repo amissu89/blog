@@ -25,17 +25,19 @@
 import {ref} from 'vue'
 import {signUp} from "../../firebase/auth.js"
 import {useRouter} from 'vue-router'
+import {useToast} from 'vue-toastification'
 
 const email = ref('')
 const password1 = ref('')
 const password2 = ref('')
 
 const router = useRouter()
+const toast = useToast()
 
 const register = () =>{
 
     if(password1.value !== password2.value){
-        alert('The password does not match.')
+        toast.error('The password does not match.')
         password1.value = ''
         password2.value = ''
         return
@@ -52,7 +54,7 @@ const register = () =>{
         throw error
     }) 
 
-    alert('Registration is complete.')
+    toast.success('Registration is complete.')
     router.push('/sign-in')
 }
 </script>

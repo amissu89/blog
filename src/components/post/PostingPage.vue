@@ -38,13 +38,14 @@ import { addDocument, setDocument, getDocument, updateDocument } from '../../fir
 import { uploadFile, getUrl } from '../../firebase/firestorage.js';
 import PostMeta from "../../models/post-meta.js";
 import PostContent from "../../models/post-content.js";
+import { useToast } from 'vue-toastification'
 
 const router = useRouter();
 const route = useRoute();
 
 const postTitle = ref("");
 const category = ref("");
-const content = ref("<p>내용을 작성하세요</p>");
+const content = ref("");
 const images = ref([]);
 const loading = ref(false);
 const id = ref(route.params.id || "");
@@ -55,6 +56,8 @@ const randomValue = ref("");
 
 const BOARD_INFO = Constant.BOARD_INFO;
 const BOARD_CONTENT = Constant.BOARD_CONTENT;
+
+const toast = useToast()
 
 onMounted(() => {
   randomValue.value = getRandomString();
@@ -87,7 +90,7 @@ const loadPostData = async () => {
 
 const handleImageUpload = async (blob, callback) => {
   if (blob.size > Constant.IMG_MAX_BYTE) {
-    alert("이미지 하나는 5MB 미만이어야합니다.");
+    toast.error("이미지 하나는 5MB 미만이어야합니다.");
     return;
   }
 
@@ -110,11 +113,12 @@ const updateContent = newContent => {
 const savePost = async () => {
   try {
     saving.value = true;
-    if (!postTitle.value || !content.value) {
-      alert("제목과 내용을 입력하세요.");
+    if (!postTitle.value.trim() || !content.value.trim() || !category.value) {
+      toast.error("제목과 내용을 입력하세요.");
+      saving.value = false;
       return;
     }
-    
+
     console.log(route.query.edit)
     const postMeta = createMetaData(userUid.value);
     const postContent = createContentData(id.value || "");
@@ -130,8 +134,10 @@ const savePost = async () => {
     }
 
     router.push("/posts");
+
+
   } catch (error) {
-    console.error("Error saving post:", error);
+    console.error("게시글 저장 중 오류가 발생했습니다. 다시 시도해주세요. ", error);
   } finally {
     saving.value = false;
   }
