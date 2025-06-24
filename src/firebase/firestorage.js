@@ -18,16 +18,6 @@ export async function uploadFile(storageName, file){
         console.error(`Error uploading file: ${storageName}`, error);
         throw error;
       }
-    // return uploadBytes(storageRef, file)
-    // .then((snapahot)=>{
-    //     console.log('uploaded a blob or file')
-    //     console.log(snapahot)
-    //     return snapahot
-    // })
-    // .catch((error)=>{
-    //     console.error(`Error uploading file: ${storageName}` , error)
-    //     throw error
-    // })
 }
 
 export async function getUrl(fullPathFileName){

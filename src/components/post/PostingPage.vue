@@ -39,6 +39,7 @@ import { uploadFile, getUrl } from '../../firebase/firestorage.js';
 import { createPostMeta } from "../../models/post-meta.js";
 import { createPostContent } from '@/models/post-content';
 import { useToast } from 'vue-toastification'
+import imageCompression from 'browser-image-compression';
 
 const router = useRouter();
 const route = useRoute();
@@ -94,15 +95,27 @@ const handleImageUpload = async (blob, callback) => {
     return;
   }
 
-  const path = `${Constant.STOR_IMG_PATH}/${randomValue.value}/${blob.name}`;
-  images.value.push(path);
+  const options = {
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1024,
+    useWebWorker: true,
+  }
 
   try {
-    await uploadFile(path, blob);
+
+    const compressedBlob = await imageCompression(blob, options)
+
+    const timestamp = Date.now()
+    const extension = compressedBlob.type.split('/').pop()
+    const fileName = `${randomValue.value}_${timestamp}.${extension}`;
+    const path = `${Constant.STOR_IMG_PATH}/${randomValue.value}/${fileName}`;
+    images.value.push(path);
+    await uploadFile(path, compressedBlob);
     const url = await getUrl(path);
     callback(url, "test");
   } catch (error) {
     console.error("Error uploading or getting URL:", error);
+    toast.error("이미지 업로드 중 오류가 발생했습니다.");
   }
 };
 
@@ -143,34 +156,18 @@ const savePost = async () => {
   }
 };
 
-// const createMetaData = uid => ({
-//   ...PostMeta,
-//   title: postTitle.value,
-//   createDt: new Date().toISOString(),
-//   hit: 0,
-//   user: uid,
-//   category: category.value,
-// });
-
 const createMetaData = uid => createPostMeta({
   title: postTitle.value,
   category: category.value,
   user: uid,
 });
 
-
-// const createContentData = docId => ({
-//   ...PostContent,
-//   id: docId,
-//   content: content.value,
-//   images: [...images.value],
-// });
-
 const createContentData = docId => createPostContent({
   id: docId,
-  content : content.value,
-  images : [...images.value],
+  content: content.value,
+  images: [...images.value],
 })
+
 </script>
 
 <style scoped>
