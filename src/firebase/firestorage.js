@@ -39,24 +39,37 @@ export async function getUrl(fullPathFileName){
     // })
 }
 
-export function deleteAttachments(attachmentsList){
-    for(const attachment of attachmentsList){
-        const storageRef = ref(storage, attachment)
-        deleteObject(storageRef).then(()=>{
-            console.log(`${attachment} deleted success`)
-        }).catch( (error)=>{
-            console.error(`${attachment} deleted failed.`, error)
-        })
-    }
-}
+// export function deleteAttachments(attachmentsList){
+//     for(const attachment of attachmentsList){
+//         const storageRef = ref(storage, attachment)
+//         deleteObject(storageRef).then(()=>{
+//             console.log(`${attachment} deleted success`)
+//         }).catch( (error)=>{
+//             console.error(`${attachment} deleted failed.`, error)
+//         })
+//     }
+// }
 
-export function deleteStorageFiles(files){
-    for(const thisFile of files){
-        const storageRef = ref(storage, thisFile)
-        deleteObject(storageRef).then(()=>{
-            console.log(`${thisFile} deleted success`)
-        }).catch( (error)=>{
-            console.error(`${thisFile} deleted failed.`, error)
-        })
+// export function deleteStorageFiles(files){
+//     for(const thisFile of files){
+//         const storageRef = ref(storage, thisFile)
+//         deleteObject(storageRef).then(()=>{
+//             console.log(`${thisFile} deleted success`)
+//         }).catch( (error)=>{
+//             console.error(`${thisFile} deleted failed.`, error)
+//         })
+//     }
+// }
+
+export function deleteFiles(paths){
+    console.log(paths)
+    const res = -1;
+    for( const path of paths){
+        const fileRef = ref(storage, path)
+        deleteObject(fileRef)
+        .then(()=> console.log(`${path} deleted successfully`))
+        .catch((error) => console.error(`${path} deletion failed`, error))
     }
+
+    return res
 }

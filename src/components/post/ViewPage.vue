@@ -1,19 +1,21 @@
 <template>
     <div class="container">
         <div v-if="loading">Loading...</div>
-        <div v-else> 
+        <div v-else>
             <h2> [{{ meta.category }}] {{ meta.title }}</h2>
             <hr class="border border-dark border-1 opacity-100" />
-            <p> 
-                {{ new Date(meta.createDt).toLocaleString() }}  
-                <span v-if="adminMode" >  <button type="button" class="btn btn-outline-dark" @click="editMode(content.id)">수정 </button> </span> &nbsp;
-                <span v-if="adminMode" >  <button type="button" class="btn btn-outline-dark" @click="deleteMode(content.id)">삭제 </button> </span>
+            <p>
+                {{ new Date(meta.createDt).toLocaleString() }}
+                <span v-if="adminMode"> <button type="button" class="btn btn-outline-dark"
+                        @click="editMode(content.id)">수정 </button> </span> &nbsp;
+                <span v-if="adminMode"> <button type="button" class="btn btn-outline-dark"
+                        @click="deleteMode(content.id)">삭제 </button> </span>
             </p>
-            <ToastViewer :content="content.content"/>
+            <ToastViewer :content="content.content" />
 
             <button type="button" class="btn btn-outline-dark float-right" @click="$router.go(-1)">목록으로</button>
         </div>
-        
+
     </div>
 </template>
 
@@ -21,6 +23,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import { getDocument, deleteDocument } from '../../firebase/firestore'
+import { deleteFiles } from '@/firebase/firestorage'
 import { observeAuthState } from '../../firebase/auth'
 import Constant from '../../constant.js'
 import ToastViewer from '../toast/ToastViewer.vue'
@@ -89,7 +92,12 @@ const deleteMode = async (id) => {
     if (isConfirmed) {
         try {
             // Delete content
-            
+
+            const contentImageUrls = content.value.images
+
+            deleteFiles(contentImageUrls)
+
+            // Step 3: Delete Firestore documents
             await deleteDocument(Constant.BOARD_CONTENT, id)
             // Delete meta information
             await deleteDocument(Constant.BOARD_INFO, id)
@@ -100,13 +108,15 @@ const deleteMode = async (id) => {
         }
     }
 }
+
 </script>
 
 <style scoped>
-    .container{
-        margin-top: 2vh;
-    }
-    .float-right {
-        float: right;
-    }
+.container {
+    margin-top: 2vh;
+}
+
+.float-right {
+    float: right;
+}
 </style>

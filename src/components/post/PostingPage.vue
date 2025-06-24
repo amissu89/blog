@@ -90,6 +90,14 @@ const loadPostData = async () => {
 };
 
 const handleImageUpload = async (blob, callback) => {
+
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
+  if (!allowedTypes.includes(blob.type)) {
+    toast.error('지원하지 않는 이미지 형식입니다.');
+    return;
+  }
+
   if (blob.size > Constant.IMG_MAX_BYTE) {
     toast.error("이미지 하나는 5MB 미만이어야합니다.");
     return;
@@ -143,6 +151,7 @@ const savePost = async () => {
     } else {
       // Create new document
       const docMetaId = await addDocument(BOARD_INFO, postMeta);
+      postContent.id = docMetaId
       await setDocument(BOARD_CONTENT, docMetaId, postContent);
     }
 
@@ -167,6 +176,8 @@ const createContentData = docId => createPostContent({
   content: content.value,
   images: [...images.value],
 })
+
+
 
 </script>
 
