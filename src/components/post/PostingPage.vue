@@ -54,6 +54,7 @@ const category = ref("");
 const content = ref("");
 const summary = ref("")
 const images = ref([]);
+const imageUrls = ref([]);
 const loading = ref(false);
 const id = ref(route.params.id || "");
 const editMode = ref(route.query.edit === "true");
@@ -127,6 +128,7 @@ const handleImageUpload = async (blob, callback) => {
     images.value.push(path);
     await uploadFile(path, compressedBlob);
     const url = await getUrl(path);
+    imageUrls.value.push(url)
     callback(url, "test");
   } catch (error) {
     console.error("Error uploading or getting URL:", error);
@@ -183,6 +185,7 @@ const createContentData = docId => createPostContent({
   id: docId,
   content: content.value,
   images: [...images.value],
+  imageUrls: [...imageUrls.value],
 })
 
 

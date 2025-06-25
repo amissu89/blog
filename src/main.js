@@ -10,10 +10,13 @@ import './assets/css/main-style.css'
 import './assets/css/color.css'
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
+import { createHead } from '@vueuse/head'
 
 const app = createApp(App)
+const head = createHead()
 
 app.use(router)
+app.use(head)
 app.use(Toast, {
   // 필요 시 옵션 지정
   position: 'top-right',
@@ -24,4 +27,3 @@ app.use(Toast, {
 })
 
 app.mount('#app')
-//createApp(App).use(router).mount('#app')

@@ -1,6 +1,9 @@
 <template>
     <div class="container">
         <div v-if="loading">Loading...</div>
+        <div v-else-if="!meta">
+            <p>게시글이 존재하지 않거나 삭제되었습니다.</p>
+        </div>
         <div v-else>
             <h2> [{{ meta.category }}] {{ meta.title }}</h2>
             <hr class="border border-dark border-1 opacity-100" />
@@ -21,21 +24,57 @@
 
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed, watchEffect } from 'vue'
 import { getDocument, deleteDocument } from '../../firebase/firestore'
 import { deleteFiles } from '@/firebase/firestorage'
 import { observeAuthState } from '../../firebase/auth'
 import Constant from '../../constant.js'
 import ToastViewer from '../toast/ToastViewer.vue'
+import { useHead } from '@vueuse/head'
 
 const route = useRoute()
 const router = useRouter()
 
 const id = ref('')
-const meta = ref('')
-const content = ref('')
+const meta = ref(null)
+const content = ref(null)
 const loading = ref(true)
 const adminMode = ref(false)
+
+const title = computed(() => meta.value?.title || '글 제목 없음')
+const summary = computed(() => meta.value?.summary || '기본 요약 설명입니다')
+const imageUrl = computed(() => content.value?.imageUrls?.[0] || null)
+
+watchEffect(() => {
+    if (meta.value && content.value) {
+        useHead({
+            title: title,
+            meta: [
+                {
+                    name: 'description',
+                    content: summary,
+                },
+                {
+                    property: 'og:title',
+                    content: title,
+                },
+                {
+                    property: 'og:description',
+                    content: summary,
+                },
+                {
+                    property: 'og:type',
+                    content: 'article',
+                },
+                {
+                    property: 'twitter:card',
+                    content: 'summary',
+                },
+                ...(imageUrl.value ? [{ property: 'og:image', content: imageUrl.value }] : [])
+            ]
+        })
+    }
+})
 
 onMounted(async () => {
     // Observe authentication state and set admin mode if user is logged in
@@ -67,6 +106,9 @@ onMounted(async () => {
         loading.value = false
     }
 })
+
+
+
 
 // Navigate to edit mode with parameters
 const editMode = (id) => {

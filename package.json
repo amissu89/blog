@@ -10,6 +10,7 @@
   "dependencies": {
     "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
     "@toast-ui/editor": "^3.2.2",
+    "@vueuse/head": "^2.0.0",
     "bootstrap": "^5.3.3",
     "browser-image-compression": "^2.0.2",
     "core-js": "^3.8.3",
