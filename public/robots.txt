@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /sign-in
+Disallow: /sign-up

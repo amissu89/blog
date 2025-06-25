@@ -12,6 +12,11 @@
       <input type="text" class="form-control" id="post-title" v-model="postTitle" />
     </div>
 
+    <div class="mb-3">
+      <label for="post-summary" calss="form-label">설명</label>
+      <input type="text" class="form-control" id="psot-summary" v-model="summary" maxlength="150" placeholder="이 글의 핵심내용 간단히 요약"/>
+    </div>
+
     <ToastEditor v-model="content" @add-image="handleImageUpload" @update:modelValue="updateContent" />
 
     <div class="buttons">
@@ -47,6 +52,7 @@ const route = useRoute();
 const postTitle = ref("");
 const category = ref("");
 const content = ref("");
+const summary = ref("")
 const images = ref([]);
 const loading = ref(false);
 const id = ref(route.params.id || "");
@@ -75,6 +81,7 @@ const loadPostData = async () => {
     if (metaSnapshot.exists()) {
       const meta = metaSnapshot.data();
       postTitle.value = meta.title;
+      summary.value = meta.summary;
       category.value = meta.category;
 
       const contentSnapshot = await getDocument(BOARD_CONTENT, id.value);
@@ -134,7 +141,7 @@ const updateContent = newContent => {
 const savePost = async () => {
   try {
     saving.value = true;
-    if (!postTitle.value.trim() || !content.value.trim() || !category.value) {
+    if (!postTitle.value.trim() || !content.value.trim() || !category.value ) {
       toast.error("제목과 내용을 입력하세요.");
       saving.value = false;
       return;
@@ -168,6 +175,7 @@ const savePost = async () => {
 const createMetaData = uid => createPostMeta({
   title: postTitle.value,
   category: category.value,
+  summary: summary.value,
   user: uid,
 });
 
