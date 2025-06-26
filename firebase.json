@@ -12,12 +12,45 @@
     ],
     "rewrites": [
       {
+        "source": "/sitemap.xml",
+        "function": "serveSitemap"
+      },
+      {
+        "source": "/robots.txt",
+        "destination": "/robots.txt"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
+      }
+    ],
+    "redirects": [
+      {
+        "source": "https://today-9d9e5.web.app/**",
+        "destination": "https://yllee.pe.kr",
+        "type": 301
+      },
+      {
+        "source": "https://today-9d9e5.firebaseapp.com/**",
+        "destination": "https://yllee.pe.kr",
+        "type": 301
       }
     ]
   },
   "storage": {
     "rules": "storage.rules"
-  }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ]
 }
