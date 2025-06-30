@@ -4,7 +4,7 @@ module.exports = defineConfig({
 
   chainWebpack: config => {
     config.plugin('html').tap(args => {
-      args[0].title = 'Lee Yonglim\'s archiving'
+      args[0].title = 'Debugging Parenthood'
       return args
     })
   }
