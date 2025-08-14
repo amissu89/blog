@@ -63,8 +63,8 @@ const links = ref(
             visible: true
         },
         {
-            to: '/profile',
-            title: 'Career',
+            to: '/work',
+            title: 'Work',
             visible: true
         },
         {

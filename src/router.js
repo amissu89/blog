@@ -16,8 +16,8 @@ const routes = [
         component: () => import('./components/post/PostList.vue') 
     },
     { 
-        path: '/profile', 
-        component: () => import('./components/profile/ProfilePage.vue'),
+        path: '/work', 
+        component: () => import('./components/work/WorkPage.vue'),
     },
     {
         path: '/posting',
