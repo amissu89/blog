@@ -2,7 +2,7 @@
     <nav class="navbar sticky-top navbar-expand-lg">
         <div class="container-fluid">
             <!-- <a href="#" class="navbar-brand">Archaiving🌿</a> -->
-            <router-link to="/" class="navbar-brand" @click="closeMenu">디버깅 육아🌿</router-link>
+            <router-link to="/" class="navbar-brand" @click="closeMenu">Rocky🌿</router-link>
 
             <!--모바일버전일때 메뉴 버튼-->
             <!-- <button class="navbar-toggler" type="button" 

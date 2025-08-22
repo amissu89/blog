@@ -1,7 +1,7 @@
 <template lang="">
     <div class="row">
         <div class="col"> 
-            <p> &copy; Lee yonglim | All Rights Reserved </p>
+            <p> &copy; Rocky | All Rights Reserved </p>
         </div>
     </div>
 </template>
