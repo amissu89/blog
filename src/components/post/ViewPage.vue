@@ -25,9 +25,7 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 import { onMounted, ref, computed, watchEffect } from 'vue'
-import { getDocument, deleteDocument } from '../../firebase/firestore'
-import { deleteFiles } from '@/firebase/firestorage'
-import { observeAuthState } from '../../firebase/auth'
+import { getDocument, deleteDocument, deleteFiles, observeAuthState } from '../../firebase/firebase-app.js'
 import Constant from '../../constant.js'
 import ToastViewer from '../toast/ToastViewer.vue'
 import { useHead } from '@vueuse/head'

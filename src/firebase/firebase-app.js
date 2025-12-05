@@ -1,15 +1,105 @@
-import { initializeApp } from 'firebase/app'
+import {initializeApp} from 'firebase/app'
 import FirebaseConfig from './firebase-config.js'
-import Constant from "../constant.js"
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage"
 import {
     doc, getDoc, addDoc, setDoc, getFirestore,
     collection, getDocs, query, where, orderBy,
     updateDoc, deleteDoc
 } from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth"
+
+import Constant from "../constant.js"
 
 const app = initializeApp(FirebaseConfig)
-// Initialize Cloud Firestore and get a reference to the service
+const storage = getStorage(app);
 const db = getFirestore(app);
+const auth = getAuth(app)
+
+export function loginWithEmail(email, password){
+    return signInWithEmailAndPassword(auth, email, password)
+}
+
+export function logout(){
+    return signOut(auth)
+}
+
+export function observeAuthState(callback){
+    return onAuthStateChanged(auth, callback)
+}
+
+export function signUp(email, password){
+    return createUserWithEmailAndPassword(auth, email, password)
+}
+
+
+export async function uploadFile(storageName, file){
+    console.log(storageName)
+    const storageRef = ref(storage, storageName)
+
+    try{
+        const snapshot = await uploadBytes(storageRef, file)
+        console.log('Uploaded a blob or file:', snapshot);
+        return snapshot;
+    } catch (error) {
+        console.error(`Error uploading file: ${storageName}`, error);
+        throw error;
+      }
+}
+
+export async function getUrl(fullPathFileName){
+    try {
+        const url = await getDownloadURL(ref(storage, fullPathFileName));
+        console.log('URL:', url);
+        return url;
+      } catch (error) {
+        console.error(`Error retrieving URL for file: ${fullPathFileName}`, error);
+        throw error;
+      }
+    // return getDownloadURL(ref(storage, fullPathFileName))
+    // .then( (url) =>{
+    //     console.log('url 22 : ' , url)
+    //     return url
+    // }).catch((error)=>{
+    //     console.error(`Error uploading file: ${fullPathFileName}` , error)
+    //     throw error
+    // })
+}
+
+// export function deleteAttachments(attachmentsList){
+//     for(const attachment of attachmentsList){
+//         const storageRef = ref(storage, attachment)
+//         deleteObject(storageRef).then(()=>{
+//             console.log(`${attachment} deleted success`)
+//         }).catch( (error)=>{
+//             console.error(`${attachment} deleted failed.`, error)
+//         })
+//     }
+// }
+
+// export function deleteStorageFiles(files){
+//     for(const thisFile of files){
+//         const storageRef = ref(storage, thisFile)
+//         deleteObject(storageRef).then(()=>{
+//             console.log(`${thisFile} deleted success`)
+//         }).catch( (error)=>{
+//             console.error(`${thisFile} deleted failed.`, error)
+//         })
+//     }
+// }
+
+export function deleteFiles(paths){
+    console.log(paths)
+    const res = -1;
+    for( const path of paths){
+        const fileRef = ref(storage, path)
+        deleteObject(fileRef)
+        .then(()=> console.log(`${path} deleted successfully`))
+        .catch((error) => console.error(`${path} deletion failed`, error))
+    }
+
+    return res
+}
 
 export async function addDocument(collectionName, data) {
     try {

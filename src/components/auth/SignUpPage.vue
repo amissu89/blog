@@ -23,7 +23,7 @@
 </template>
 <script setup>
 import {ref} from 'vue'
-import {signUp} from "../../firebase/auth.js"
+import {signUp} from "../../firebase/firebase-app.js"
 import {useRouter} from 'vue-router'
 import {useToast} from 'vue-toastification'
 

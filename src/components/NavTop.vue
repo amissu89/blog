@@ -41,7 +41,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { observeAuthState, logout } from '../firebase/auth.js'
+import { observeAuthState, logout } from '../firebase/firebase-app.js'
 
 const router = useRouter()
 const showMenu = ref(false)

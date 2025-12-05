@@ -17,7 +17,7 @@
 
 import { nextTick, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getCollection, getDocumentsByOrdering, getDocumentsByQuery } from '../../firebase/firestore'
+import { getCollection, getDocumentsByOrdering, getDocumentsByQuery } from '../../firebase/firebase-app.js'
 import Constant from '../../constant.js'
 import { formatterForDatetime } from '../../utility.js'
 

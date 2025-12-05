@@ -38,9 +38,7 @@ import { useRoute, useRouter } from 'vue-router';
 import ToastEditor from "../toast/ToastEditor.vue";
 import Constant from "../../constant.js";
 import { getRandomString } from "../../utility.js";
-import { observeAuthState } from '../../firebase/auth.js';
-import { addDocument, setDocument, getDocument, updateDocument } from '../../firebase/firestore.js';
-import { uploadFile, getUrl } from '../../firebase/firestorage.js';
+import { observeAuthState, addDocument, setDocument, getDocument, updateDocument, uploadFile, getUrl } from '../../firebase/firebase-app.js';
 import { createPostMeta } from "../../models/post-meta.js";
 import { createPostContent } from '@/models/post-content';
 import { useToast } from 'vue-toastification'

@@ -20,7 +20,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { loginWithEmail } from '../../firebase/auth.js'
+import { loginWithEmail } from '../../firebase/firebase-app.js'
 import { useToast } from "vue-toastification"
 
 const email = ref('')
