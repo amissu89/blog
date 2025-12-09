@@ -38,7 +38,9 @@ import { useRoute, useRouter } from 'vue-router';
 import ToastEditor from "../toast/ToastEditor.vue";
 import Constant from "../../constant.js";
 import { getRandomString } from "../../utility.js";
-import { observeAuthState, addDocument, setDocument, getDocument, updateDocument, uploadFile, getUrl } from '../../firebase/firebase-app.js';
+import { addDocument, setDocument, getDocument, updateDocument, uploadFile, getUrl } from '../../firebase/firebase-app.js';
+import { useAuthStore } from '../../stores/auth.js';
+import { storeToRefs } from 'pinia';
 import { createPostMeta } from "../../models/post-meta.js";
 import { createPostContent } from '@/models/post-content';
 import { useToast } from 'vue-toastification'
@@ -57,7 +59,8 @@ const loading = ref(false);
 const id = ref(route.params.id || "");
 const editMode = ref(route.query.edit === "true");
 const saving = ref(false);
-const userUid = ref("");
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 const randomValue = ref("");
 
 const BOARD_INFO = Constant.BOARD_INFO;
@@ -67,7 +70,6 @@ const toast = useToast()
 
 onMounted(() => {
   randomValue.value = getRandomString();
-  observeAuthState(user => (user ? (userUid.value = user.uid) : console.log('No user')));
   if (id.value) loadPostData();
 
   console.log(id.value);
@@ -139,6 +141,12 @@ const updateContent = newContent => {
 };
 
 const savePost = async () => {
+  if (!user.value) {
+    toast.error("Authentication error. Please log in again.");
+    router.push('/sign-in');
+    return;
+  }
+
   try {
     saving.value = true;
     if (!postTitle.value.trim() || !content.value.trim() || !category.value ) {
@@ -148,7 +156,7 @@ const savePost = async () => {
     }
 
     console.log(route.query.edit)
-    const postMeta = createMetaData(userUid.value);
+    const postMeta = createMetaData(user.value.uid);
     const postContent = createContentData(id.value || "");
 
     if (editMode.value) {

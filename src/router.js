@@ -1,5 +1,6 @@
 // src/router.js
 import { createRouter, createWebHistory } from 'vue-router'
+import { getCurrentUser } from './firebase/auth-helpers.js'
 
 const routes = [
 
@@ -22,12 +23,14 @@ const routes = [
     {
         path: '/posting',
         component: () => import('./components/post/PostingPage.vue'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/edit/:id',
         name: 'edit-post',
         component: () => import('./components/post/PostingPage.vue'),
         props: true,
+        meta: { requiresAuth: true }
     },
     {
         path: '/sign-in',
@@ -50,8 +53,9 @@ const router = createRouter({
     routes
 })
 
-router.beforeEach((to, from, next) => {
-    const isAuthenticated = !!localStorage.getItem('authToken'); // Example: Check if user is logged in
+router.beforeEach(async (to, from, next) => {
+    const isAuthenticated = !!await getCurrentUser();
+    
     if (to.meta.requiresAuth && !isAuthenticated) {
         next('/sign-in'); // Redirect to sign-in page if not authenticated
     } else {

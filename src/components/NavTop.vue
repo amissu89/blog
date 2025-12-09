@@ -39,51 +39,34 @@
     <!-- <hr style="border: 1px solid black;"> -->
 </template>
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { observeAuthState, logout } from '../firebase/firebase-app.js'
+import { useAuthStore } from '../stores/auth.js'
+import { storeToRefs } from 'pinia'
 
 const router = useRouter()
 const showMenu = ref(false)
-const links = ref(
-    [
-        {
-            to: '/',
-            title: 'Home',
-            visible: true
-        },
-        {
-            to: '/about',
-            title: 'About',
-            visible: true
-        },
-        {
-            to: '/posts',
-            title: 'Posts',
-            visible: true
-        },
-        {
-            to: '/work',
-            title: 'Work',
-            visible: true
-        },
-        {
-            to: '/posting',
-            title: 'Posting',
-            visible: false
-        },
-        {
-            to: '#',
-            title: 'Logout',
-            visible: false,
-        }
-    ]
-)
 
-const userAuthenticated = ref(false)
+const authStore = useAuthStore()
+const { isAuthenticated, isAdmin } = storeToRefs(authStore)
+const { logout } = authStore
+
+const links = computed(() => [
+    { to: '/', title: 'Home' },
+    { to: '/about', title: 'About' },
+    { to: '/posts', title: 'Posts' },
+    { to: '/work', title: 'Work' },
+    { to: '/posting', title: 'Posting', requiresAuth: true, requiresAdmin: true },
+    { to: '/sign-in', title: 'Login', requiresAuth: false },
+    { to: '#', title: 'Logout', requiresAuth: true },
+])
+
 const filteredLinks = computed(() => {
     return links.value.filter(link => {
-        return link.visible == true || userAuthenticated.value
+        if (link.requiresAuth === true && !isAuthenticated.value) return false;
+        if (link.requiresAuth === false && isAuthenticated.value) return false;
+        if (link.requiresAdmin === true && !isAdmin.value) return false;
+        return true;
     })
 })
 
@@ -95,23 +78,15 @@ const closeMenu = () => {
     showMenu.value = false // 메뉴 클릭하면 닫힘
 }
 
-onMounted(async () => {
-    observeAuthState((user) => {
-        if (user) {
-            userAuthenticated.value = true
-        }
-    })
-})
-
-const signOut = () => {
-    logout().then(() => {
-        userAuthenticated.value = false
+const signOut = async () => {
+    try {
+        await logout()
         router.push('/')
-        closeMenu()
-
-    }).catch(error => {
+    } catch (error) {
         console.error(`Logout failed : ${error}`)
-    })
+    } finally {
+        closeMenu()
+    }
 }
 </script>
 

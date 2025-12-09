@@ -56,13 +56,12 @@ const copyMail = (email) => {
     console.log(email)
     navigator.clipboard.writeText(email)
         .then(() => {
-            console.log('Copied: ${email}')
+            console.log(`Copied: ${email}`)
             toast.info('Email address copied to clipboard!')
         })
         .catch(err => {
             console.error('Failed to copy: ', err)
         })
-
 }
 
 </script>
@@ -144,7 +143,8 @@ a:hover {
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
-    object-position: 50% 42%;   /* (x, y) = 가운데에서 살짝 아래로 */
+    object-position: 50% 42%;
+    /* (x, y) = 가운데에서 살짝 아래로 */
 }
 
 @media (min-width: 768px) {

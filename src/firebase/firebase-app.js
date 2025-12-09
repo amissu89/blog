@@ -88,17 +88,20 @@ export async function getUrl(fullPathFileName){
 //     }
 // }
 
-export function deleteFiles(paths){
+export async function deleteFiles(paths){
     console.log(paths)
-    const res = -1;
-    for( const path of paths){
-        const fileRef = ref(storage, path)
-        deleteObject(fileRef)
-        .then(()=> console.log(`${path} deleted successfully`))
-        .catch((error) => console.error(`${path} deletion failed`, error))
-    }
+    const deletePromises = paths.map(path => {
+        const fileRef = ref(storage, path);
+        return deleteObject(fileRef);
+    });
 
-    return res
+    try {
+        await Promise.all(deletePromises);
+        console.log('All files deleted successfully.');
+    } catch (error) {
+        console.error('An error occurred while deleting files:', error);
+        throw error;
+    }
 }
 
 export async function addDocument(collectionName, data) {

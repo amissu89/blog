@@ -9,9 +9,9 @@
             <hr class="border border-dark border-1 opacity-100" />
             <p>
                 {{ new Date(meta.createDt).toLocaleString() }}
-                <span v-if="adminMode"> <button type="button" class="btn btn-outline-dark"
+                <span v-if="isAdmin"> <button type="button" class="btn btn-outline-dark"
                         @click="editMode(content.id)">수정 </button> </span> &nbsp;
-                <span v-if="adminMode"> <button type="button" class="btn btn-outline-dark"
+                <span v-if="isAdmin"> <button type="button" class="btn btn-outline-dark"
                         @click="deleteMode(content.id)">삭제 </button> </span>
             </p>
             <ToastViewer :content="content.content" />
@@ -25,7 +25,9 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 import { onMounted, ref, computed, watchEffect } from 'vue'
-import { getDocument, deleteDocument, deleteFiles, observeAuthState } from '../../firebase/firebase-app.js'
+import { getDocument, deleteDocument, deleteFiles } from '../../firebase/firebase-app.js'
+import { useAuthStore } from '../../stores/auth.js'
+import { storeToRefs } from 'pinia'
 import Constant from '../../constant.js'
 import ToastViewer from '../toast/ToastViewer.vue'
 import { useHead } from '@vueuse/head'
@@ -37,7 +39,9 @@ const id = ref('')
 const meta = ref(null)
 const content = ref(null)
 const loading = ref(true)
-const adminMode = ref(false)
+
+const authStore = useAuthStore()
+const { isAdmin } = storeToRefs(authStore)
 
 const title = computed(() => meta.value?.title || '글 제목 없음')
 const summary = computed(() => meta.value?.summary || '기본 요약 설명입니다')
@@ -75,13 +79,6 @@ watchEffect(() => {
 })
 
 onMounted(async () => {
-    // Observe authentication state and set admin mode if user is logged in
-    observeAuthState((user) => {
-        if (user) {
-            adminMode.value = true
-        }
-    })
-
     try {
         id.value = route.params.id
 
@@ -114,7 +111,7 @@ const editMode = (id) => {
         router.push({
             name: 'edit-post',
             params: {
-                id: id.value,
+                id: id,
             },
             query: {
                 edit: true,

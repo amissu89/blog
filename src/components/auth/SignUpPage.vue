@@ -34,7 +34,7 @@ const password2 = ref('')
 const router = useRouter()
 const toast = useToast()
 
-const register = () =>{
+const register = async () =>{
 
     if(password1.value !== password2.value){
         toast.error('The password does not match.')
@@ -43,19 +43,17 @@ const register = () =>{
         return
     }
 
-    signUp(email.value, password1.value)
-    .then( (userCredential) => {
+    try {
+        const userCredential = await signUp(email.value, password1.value)
         const user = userCredential.user
         console.debug(`User created : ${user}`)
-        return user
-    })
-    .catch((error) =>{
+        toast.success('Registration is complete.')
+        router.push('/sign-in')
+    } catch (error) {
+        const errorMessage = error.message;
         console.error(`User creation failed : ${error}`)
-        throw error
-    }) 
-
-    toast.success('Registration is complete.')
-    router.push('/sign-in')
+        toast.error(`Registration failed: ${errorMessage}`)
+    }
 }
 </script>
 <style></style>
