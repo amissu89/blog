@@ -1,0 +1,83 @@
+/* ========================================
+   Warm & Personal Color Palette
+   ======================================== */
+
+:root {
+  /* Primary Colors - Warm neutrals */
+  --color-primary: #3A3635;
+  --color-primary-light: #5C5856;
+  --color-accent: #E07A5F;        /* Warm coral */
+  --color-accent-hover: #D16850;
+  --color-accent-light: #F2B5A5;
+
+  /* Text Colors */
+  --color-text: #3A3635;
+  --color-text-secondary: #6B6562;
+  --color-text-tertiary: #9B9390;
+  --color-text-muted: #B8B4B1;
+
+  /* Background Colors - Warm tones */
+  --color-bg: #FBF9F7;            /* Warm white */
+  --color-bg-secondary: #F5F1ED;  /* Warm gray */
+  --color-card: #FFFFFF;
+  --color-border: #E8E3DF;
+  --color-border-light: #F0EBE7;
+
+  /* Semantic Colors */
+  --color-success: #81B29A;       /* Warm green */
+  --color-warning: #F4A261;       /* Warm orange */
+  --color-error: #D97979;         /* Warm red */
+  --color-info: #7BA3C0;          /* Warm blue */
+
+  /* Shadows - Softer, warmer shadows */
+  --shadow-xs: 0 1px 3px rgba(58, 54, 53, 0.04);
+  --shadow-sm: 0 2px 6px rgba(58, 54, 53, 0.06);
+  --shadow-md: 0 4px 10px rgba(58, 54, 53, 0.08);
+  --shadow-lg: 0 8px 16px rgba(58, 54, 53, 0.1);
+  --shadow-xl: 0 12px 24px rgba(58, 54, 53, 0.12);
+
+  /* Interactive shadows with warm glow */
+  --shadow-glow: 0 4px 12px rgba(224, 122, 95, 0.15);
+  --shadow-hover: 0 6px 14px rgba(58, 54, 53, 0.12);
+
+  /* Spacing Scale */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Typography Scale */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;  /* 30px */
+  --font-size-4xl: 2.25rem;   /* 36px */
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.3s ease;
+}
+
+/* Dark mode variant (optional for future) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #2B2826;
+    --color-card: #3A3635;
+    --color-text: #F5F1ED;
+    --color-border: #4A4542;
+  }
+}

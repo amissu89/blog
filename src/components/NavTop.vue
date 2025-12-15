@@ -91,12 +91,39 @@ const signOut = async () => {
 </script>
 
 <style scoped>
+/* Navbar - Clean & Minimal */
 .navbar {
-  background-color: white;
+  background-color: transparent;
+  padding: var(--spacing-lg) var(--spacing-md);
 }
 
+/* Brand Styling */
+.navbar-brand {
+  font-weight: 700;
+  font-size: var(--font-size-2xl);
+  color: var(--color-primary);
+  transition: color var(--transition-base);
+  text-decoration: none;
+}
+
+.navbar-brand:hover {
+  color: var(--color-accent);
+}
+
+/* Toggler Button */
+.navbar-toggler {
+  border: none;
+  padding: var(--spacing-sm);
+}
+
+.navbar-toggler:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Collapse Menu */
 .collapse.navbar-collapse {
-  transition: max-height 0.3s ease-in-out;
+  transition: max-height var(--transition-slow);
   overflow: hidden;
   max-height: 0;
 }
@@ -105,25 +132,52 @@ const signOut = async () => {
   max-height: 500px;
 }
 
+/* Navigation List */
 ul.navbar-nav {
   padding-left: 0;
-  margin-top: 0.5rem;
+  margin-top: var(--spacing-sm);
+  gap: var(--spacing-xs);
 }
 
 ul.navbar-nav li {
-  margin-bottom: 0.3rem;
+  margin-bottom: var(--spacing-sm);
 }
 
+/* Navigation Buttons - Simple Style */
 ul.navbar-nav li .btn {
   width: 100%;
   text-align: left;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  border: none;
+  color: var(--color-text);
+  background-color: transparent;
+  transition: color var(--transition-base);
 }
 
+ul.navbar-nav li .btn:hover {
+  color: var(--color-accent);
+}
+
+/* Active Link Styling */
+.nav-link {
+  text-decoration: none;
+}
+
+.router-link-active .btn {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* Mobile Styles */
 @media (max-width: 768px) {
   .navbar {
-    padding: 0.5rem 1rem;
+    padding: var(--spacing-md) var(--spacing-sm);
+  }
+
+  .navbar-brand {
+    font-size: var(--font-size-xl);
   }
 
   .navbar-nav {
@@ -134,13 +188,34 @@ ul.navbar-nav li .btn {
     display: block;
     width: 100%;
   }
+
+  ul.navbar-nav li .btn {
+    text-align: center;
+  }
 }
 
+/* Desktop Styles */
 @media (min-width: 992px) {
   .collapse.navbar-collapse {
     display: flex !important;
     max-height: none !important;
     overflow: visible !important;
+  }
+
+  ul.navbar-nav {
+    flex-direction: row;
+    margin-top: 0;
+  }
+
+  ul.navbar-nav li {
+    margin-bottom: 0;
+    margin-right: var(--spacing-md);
+  }
+
+  ul.navbar-nav li .btn {
+    width: auto;
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-align: center;
   }
 }
 </style>

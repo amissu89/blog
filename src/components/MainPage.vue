@@ -9,23 +9,24 @@
         
         <!-- 설명글 -->
         <div class="col-12 col-md-8 description">
-            <quote> 어제보다 나은 내가 됩시다. </quote> <br/>
-            <quote> Let's be better than yesterday. </quote>
-            <br/>
-            <br/>
-            <p> 살면서 제일 중요한 것은 가족과 내 주변의 사람들과의 관계입니다.  <br/>
-                디지털 세계에서 일하지만 현실 세계의 관계들이 더욱 중요합니다. <br/>
+            <blockquote class="hero-quote">
+                <p>어제보다 나은 내가 됩시다.</p>
+                <p>Let's be better than yesterday.</p>
+            </blockquote>
+
+            <p class="bio"> 살면서 제일 중요한 것은 가족과 내 주변의 사람들과의 관계입니다.<br/>
+                디지털 세계에서 일하지만 현실 세계의 관계들이 더욱 중요합니다.<br/>
                 일을 어떻게 하면 더 잘할지에 대해 항상 고민하고 있습니다.</p>
-            <br/>
-            <p> I think the most important thing in life is my family and relationships with people around me.  <br/>
-                I work in the digital world, but relationships in the real world are even more important. <br/>
+
+            <p class="bio"> I think the most important thing in life is my family and relationships with people around me.<br/>
+                I work in the digital world, but relationships in the real world are even more important.<br/>
                 I am a developer who is thinking about how to do a good job.</p>
-            <br/>
+
             <h5>Contact. </h5>
                 <ul>
-                <li @click="copyMail('yonglimlee@gmail.com')"><a href="#"> 📧 yonglimlee@gmail.com </a></li> 
+                <li @click="copyMail('yonglimlee@gmail.com')" class="clickable"><a href="#"> 📧 yonglimlee@gmail.com </a></li>
                 </ul>
-                <br/>
+
                 <h5>Channel. </h5>
                 <ul>
                 <li> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
@@ -67,39 +68,76 @@ const copyMail = (email) => {
 </script>
 <style scoped>
 .row {
-    background-color: #FFFFFF;
-    border: 1px solid #E0E0E0;
-    border-radius: 12px;
-    padding: 24px;
-    margin: 40px auto;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    margin: var(--spacing-xl) auto;
+    box-shadow: var(--shadow-md);
     max-width: 960px;
+    transition: box-shadow var(--transition-slow);
 }
 
-.description h5 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #2B2B2B;
+.row:hover {
+    box-shadow: var(--shadow-lg);
 }
 
-.description quote {
+/* Hero Quote Styling */
+.hero-quote {
+    margin: 0 0 var(--spacing-xl) 0;
+    padding: var(--spacing-lg);
+    padding-left: var(--spacing-xl);
+    border-left: 4px solid var(--color-accent);
+    background: linear-gradient(to right, var(--color-bg-secondary), transparent);
+    border-radius: var(--radius-sm);
+}
+
+.hero-quote p {
     font-style: italic;
-    color: #666;
-    font-size: 1rem;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-lg);
+    line-height: 1.6;
+    margin: 0;
 }
 
-.description p {
-    font-size: 0.95rem;
-    color: #444;
-    line-height: 1.6;
+.hero-quote p:first-child {
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Bio Text */
+.description p.bio {
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    line-height: 1.7;
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Section Headers */
+.description h5 {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-md);
+    position: relative;
+    display: inline-block;
+}
+
+.description h5::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(to right, var(--color-accent), var(--color-accent-light));
+    border-radius: var(--radius-full);
 }
 
 .description h5:not(:first-of-type) {
-    margin-top: 24px;
-    font-weight: 600;
-    color: #2E2E2E;
+    margin-top: var(--spacing-2xl);
 }
 
+/* List Styling */
 ul {
     list-style-type: none;
     padding: 0;
@@ -107,49 +145,86 @@ ul {
 }
 
 ul li {
-    margin-bottom: 10px;
-    font-size: 0.95rem;
-    color: #2B2B2B;
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-base);
+    color: var(--color-text);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--spacing-sm);
+    transition: transform var(--transition-base);
 }
 
+ul li:hover {
+    transform: translateX(4px);
+}
+
+ul li.clickable {
+    cursor: pointer;
+}
+
+ul li svg {
+    flex-shrink: 0;
+    color: var(--color-text-secondary);
+    transition: color var(--transition-base);
+}
+
+ul li:hover svg {
+    color: var(--color-accent);
+}
+
+/* Link Styling */
 a {
     text-decoration: none;
-    color: #2B2B2B;
+    color: var(--color-text);
+    transition: color var(--transition-base);
 }
 
 a:hover {
-    font-weight: 600;
-    color: #FF5722;
-    text-decoration: underline;
+    color: var(--color-accent);
 }
 
+/* Profile Image */
 .circle-image {
     width: 240px;
     height: 240px;
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     overflow: hidden;
     margin: auto;
-    margin-top: 3vh;
-    margin-bottom: 3vh;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
-    border: 4px solid #f4f4f5;
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+    border: 5px solid var(--color-accent-light);
+    transition: all var(--transition-slow);
+}
+
+.circle-image:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-glow);
+    border-color: var(--color-accent);
 }
 
 .circle-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     object-position: 50% 42%;
-    /* (x, y) = 가운데에서 살짝 아래로 */
 }
 
 @media (min-width: 768px) {
     .description {
-        margin-top: 3vh;
+        margin-top: var(--spacing-xl);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-quote p {
+        font-size: var(--font-size-base);
+    }
+
+    .circle-image {
+        width: 200px;
+        height: 200px;
     }
 }
 </style>

@@ -1,24 +1,55 @@
 <template>
     <div class="container">
-        <div v-if="loading">Loading...</div>
-        <div v-else-if="!meta">
+        <!-- Loading State -->
+        <div v-if="loading" class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading post...</p>
+        </div>
+
+        <!-- Error State -->
+        <div v-else-if="!meta" class="error-state">
+            <div class="error-icon">📭</div>
+            <h3>Post not found</h3>
             <p>게시글이 존재하지 않거나 삭제되었습니다.</p>
-        </div>
-        <div v-else>
-            <h2> [{{ meta.category }}] {{ meta.title }}</h2>
-            <hr class="border border-dark border-1 opacity-100" />
-            <p>
-                {{ new Date(meta.createDt).toLocaleString() }}
-                <span v-if="isAdmin"> <button type="button" class="btn btn-outline-dark"
-                        @click="editMode(content.id)">수정 </button> </span> &nbsp;
-                <span v-if="isAdmin"> <button type="button" class="btn btn-outline-dark"
-                        @click="deleteMode(content.id)">삭제 </button> </span>
-            </p>
-            <ToastViewer :content="content.content" />
-
-            <button type="button" class="btn btn-outline-dark float-right" @click="$router.go(-1)">목록으로</button>
+            <button type="button" class="btn btn-outline-primary" @click="$router.go(-1)">목록으로 돌아가기</button>
         </div>
 
+        <!-- Post Content -->
+        <div v-else class="post-container">
+            <div class="post-header">
+                <span class="category-badge">{{ meta.category }}</span>
+                <h1 class="post-title">{{ meta.title }}</h1>
+
+                <div class="post-meta">
+                    <span class="post-date">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                        </svg>
+                        {{ new Date(meta.createDt).toLocaleString() }}
+                    </span>
+
+                    <div v-if="isAdmin" class="admin-actions">
+                        <button type="button" class="btn btn-sm btn-edit" @click="editMode(content.id)">
+                            ✏️ 수정
+                        </button>
+                        <button type="button" class="btn btn-sm btn-delete" @click="deleteMode(content.id)">
+                            🗑️ 삭제
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <ToastViewer :content="content.content" />
+            </div>
+
+            <div class="post-footer">
+                <button type="button" class="btn btn-back" @click="$router.go(-1)">
+                    ← 목록으로
+                </button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -150,10 +181,221 @@ const deleteMode = async (id) => {
 
 <style scoped>
 .container {
-    margin-top: 2vh;
+    margin-top: var(--spacing-xl);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.float-right {
-    float: right;
+/* Loading State */
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-3xl);
+    min-height: 400px;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--color-border);
+    border-top-color: var(--color-accent);
+    border-radius: var(--radius-full);
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-state p {
+    margin-top: var(--spacing-lg);
+    color: var(--color-text-secondary);
+}
+
+/* Error State */
+.error-state {
+    text-align: center;
+    padding: var(--spacing-3xl);
+    background: var(--color-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin: var(--spacing-xl) 0;
+}
+
+.error-icon {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.5;
+}
+
+.error-state h3 {
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.error-state p {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-xl);
+}
+
+/* Post Container */
+.post-container {
+    background: var(--color-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Post Header */
+.post-header {
+    padding: var(--spacing-2xl);
+    background: linear-gradient(to bottom, var(--color-bg-secondary), var(--color-card));
+    border-bottom: 2px solid var(--color-border-light);
+}
+
+.category-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+    color: white;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+}
+
+.post-title {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.3;
+}
+
+.post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.post-date {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.post-date svg {
+    flex-shrink: 0;
+}
+
+/* Admin Actions */
+.admin-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.btn-edit,
+.btn-delete {
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    transition: all var(--transition-base);
+}
+
+.btn-edit {
+    background-color: var(--color-card);
+    border: 2px solid var(--color-accent);
+    color: var(--color-accent);
+}
+
+.btn-edit:hover {
+    background-color: var(--color-accent);
+    color: white;
+}
+
+.btn-delete {
+    background-color: var(--color-card);
+    border: 2px solid var(--color-error);
+    color: var(--color-error);
+}
+
+.btn-delete:hover {
+    background-color: var(--color-error);
+    color: white;
+}
+
+/* Post Content */
+.post-content {
+    padding: var(--spacing-2xl);
+    line-height: 1.8;
+    color: var(--color-text);
+}
+
+/* Post Footer */
+.post-footer {
+    padding: var(--spacing-xl) var(--spacing-2xl);
+    background: var(--color-bg-secondary);
+    border-top: 1px solid var(--color-border-light);
+}
+
+.btn-back {
+    background-color: var(--color-card);
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
+    padding: var(--spacing-sm) var(--spacing-xl);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    transition: all var(--transition-base);
+}
+
+.btn-back:hover {
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+    border-color: var(--color-accent);
+    color: white;
+    transform: translateX(-4px);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .post-header {
+        padding: var(--spacing-lg);
+    }
+
+    .post-title {
+        font-size: var(--font-size-2xl);
+    }
+
+    .post-content {
+        padding: var(--spacing-lg);
+    }
+
+    .post-footer {
+        padding: var(--spacing-md) var(--spacing-lg);
+    }
+
+    .post-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
 </style>

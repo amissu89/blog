@@ -173,79 +173,177 @@ export default {
 }
 </script>
 <style scoped>
-body {
-    background-color: #F4F4F5;
-    font-family: 'Noto Sans KR', sans-serif;
-    color: #2B2B2B;
-}
-
+/* Company Card */
 .company {
-    background-color: #FFFFFF;
-    border: 1px solid #E0E0E0;
-    padding: 24px;
-    border-radius: 12px;
-    margin-bottom: 32px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border-light);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-slow);
 }
 
+.company:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+}
+
+/* Company Name Header */
 .company > h3 {
-    background-color: #2E2E2E;
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
     color: #FFFFFF;
-    padding: 12px 20px;
-    border-radius: 6px;
-    font-size: 1.25rem;
-    margin-bottom: 16px;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-md);
     font-weight: 600;
+    position: relative;
+    overflow: hidden;
 }
 
+.company > h3::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.company:hover > h3::after {
+    width: 300px;
+    height: 300px;
+}
+
+/* Company Info */
 .company > p {
-    color: #707070;
-    margin-bottom: 20px;
-    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-lg);
+    font-size: var(--font-size-base);
+    font-weight: 500;
 }
 
+/* Responsibilities List */
 .company > ul {
-    padding-left: 20px;
-    margin-bottom: 20px;
-    color: #3A3A3A;
-    line-height: 1.6;
+    padding-left: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-text);
+    line-height: 1.7;
+    list-style-type: none;
 }
 
+.company > ul li {
+    position: relative;
+    padding-left: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+}
+
+.company > ul li::before {
+    content: '●';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+}
+
+/* Project Card */
 .project {
-    background-color: #FAFAFA;
-    border-left: 4px solid #4B4B4B;
-    padding: 20px;
-    margin-bottom: 24px;
-    border-radius: 6px;
-    border: 1px solid #E3E3E3;
+    background: linear-gradient(to right, var(--color-bg-secondary), var(--color-card));
+    border-left: 4px solid var(--color-accent);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-light);
+    transition: all var(--transition-base);
+    position: relative;
 }
 
+.project::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--color-accent), var(--color-accent-hover));
+    transition: width var(--transition-base);
+}
+
+.project:hover {
+    border-left-width: 8px;
+    transform: translateX(4px);
+    box-shadow: var(--shadow-sm);
+}
+
+.project:hover::before {
+    width: 8px;
+}
+
+/* Project Name */
 .project-name {
-    color: #4B4B4B;
+    color: var(--color-primary);
     font-weight: 600;
-    font-size: 1.1rem;
-    margin-bottom: 8px;
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-sm);
 }
 
+/* Tech Stack */
 .tech-stack {
-    font-size: 0.9rem;
-    color: #999999;
+    font-size: var(--font-size-sm);
+    color: var(--color-accent);
     font-style: italic;
-    margin-bottom: 10px;
+    margin-bottom: var(--spacing-md);
+    font-weight: 500;
 }
 
+/* Project Details List */
 .project ul {
-    padding-left: 20px;
-    color: #333333;
-    line-height: 1.6;
+    padding-left: var(--spacing-lg);
+    color: var(--color-text);
+    line-height: 1.7;
 }
 
+.project ul li {
+    margin-bottom: var(--spacing-xs);
+}
+
+/* Section Divider */
 hr {
     border: none;
-    height: 1px;
-    background: #D9D9D9;
-    margin: 40px 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--color-accent-light), transparent);
+    margin: var(--spacing-3xl) 0;
+    position: relative;
 }
 
+hr::after {
+    content: '◆';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--color-bg);
+    color: var(--color-accent);
+    padding: 0 var(--spacing-md);
+    font-size: var(--font-size-sm);
+}
 
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .company {
+        padding: var(--spacing-lg);
+    }
+
+    .company > h3 {
+        font-size: var(--font-size-lg);
+    }
+
+    .project-name {
+        font-size: var(--font-size-base);
+    }
+}
 </style>

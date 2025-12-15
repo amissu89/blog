@@ -1,15 +1,28 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
     /* font-family: 'Nanum Myeongjo', serif; */
+    font-weight: 400;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+}
+
+h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
-}   
+}
 
 .btn {
-    border-radius: 0;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .buttons {
