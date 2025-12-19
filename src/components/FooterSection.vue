@@ -19,7 +19,7 @@ export default {
 
 <style scoped>
 .footer {
-    background: linear-gradient(to bottom, var(--color-card), var(--color-bg-secondary));
+    background-color: var(--color-bg);
     border-top: 2px solid var(--color-border-light);
     margin-top: var(--spacing-3xl);
     padding: var(--spacing-lg) var(--spacing-md);
