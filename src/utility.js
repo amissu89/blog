@@ -1,3 +1,5 @@
+import logger from './utils/logger.js'
+
 export function formatterForDatetime(dt) {
     const date = new Date(dt);
     const formattedDate = new Intl.DateTimeFormat("ko-KR", {
@@ -14,7 +16,7 @@ export function formatterForDatetime(dt) {
 export function getRandomString() {
     const array = new Uint32Array(1)
     self.crypto.getRandomValues(array)
-    console.log(`getRandomString() randomvalue: ${array[0]} ${typeof(array[0])}`)
+    logger.debug(`getRandomString() randomvalue: ${array[0]} ${typeof(array[0])}`)
     return array[0]
 }
 

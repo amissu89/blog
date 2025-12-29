@@ -6,21 +6,22 @@
   import Viewer from "@toast-ui/editor/dist/toastui-editor-viewer";
   import "@toast-ui/editor/dist/toastui-editor-viewer.css";
   import { ref, onMounted } from "vue";
-  
+  import logger from '../../utils/logger.js';
+
   const viewerRef = ref();
-  let viewer = null;
   const props = defineProps({
     content: String,
   });
-  
+
   onMounted(() => {
-  
-    viewer = new Viewer({
+    // Initialize Toast UI viewer
+    // eslint-disable-next-line no-unused-vars
+    const viewer = new Viewer({
       el: viewerRef.value,
       initialValue: props.content,
     });
-  
-    console.log(viewer)
+
+    logger.debug('Toast viewer initialized');
   });
   </script>
   

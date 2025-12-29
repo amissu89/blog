@@ -43,6 +43,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
 import { storeToRefs } from 'pinia'
+import logger from '../utils/logger.js'
 
 const router = useRouter()
 const showMenu = ref(false)
@@ -63,9 +64,16 @@ const links = computed(() => [
 
 const filteredLinks = computed(() => {
     return links.value.filter(link => {
-        if (link.requiresAuth === true && !isAuthenticated.value) return false;
+        // Show link if no auth requirements specified
+        if (link.requiresAuth === undefined) return true;
+
+        // Check auth requirement
+        if (link.requiresAuth && !isAuthenticated.value) return false;
         if (link.requiresAuth === false && isAuthenticated.value) return false;
-        if (link.requiresAdmin === true && !isAdmin.value) return false;
+
+        // Check admin requirement
+        if (link.requiresAdmin && !isAdmin.value) return false;
+
         return true;
     })
 })
@@ -83,7 +91,7 @@ const signOut = async () => {
         await logout()
         router.push('/')
     } catch (error) {
-        console.error(`Logout failed : ${error}`)
+        logger.error('Logout failed:', error)
     } finally {
         closeMenu()
     }

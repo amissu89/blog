@@ -55,13 +55,14 @@
 
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
-import { onMounted, ref, computed, watchEffect } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import { getDocument, deleteDocument, deleteFiles } from '../../firebase/firebase-app.js'
 import { useAuthStore } from '../../stores/auth.js'
 import { storeToRefs } from 'pinia'
 import Constant from '../../constant.js'
 import ToastViewer from '../toast/ToastViewer.vue'
-import { useHead } from '@vueuse/head'
+import { useSeo, generateBlogPostStructuredData, injectStructuredData } from '../../composables/useSeo.js'
+import logger from '../../utils/logger.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -74,38 +75,40 @@ const loading = ref(true)
 const authStore = useAuthStore()
 const { isAdmin } = storeToRefs(authStore)
 
-const title = computed(() => meta.value?.title || '글 제목 없음')
-const summary = computed(() => meta.value?.summary || '기본 요약 설명입니다')
-const imageUrl = computed(() => content.value?.imageUrls?.[0] || null)
+const seoOptions = computed(() => {
+    if (!meta.value || !content.value) return {}
 
-watchEffect(() => {
-    if (meta.value && content.value) {
-        useHead({
-            title: title,
-            meta: [
-                {
-                    name: 'description',
-                    content: summary,
-                },
-                {
-                    property: 'og:title',
-                    content: title,
-                },
-                {
-                    property: 'og:description',
-                    content: summary,
-                },
-                {
-                    property: 'og:type',
-                    content: 'article',
-                },
-                {
-                    property: 'twitter:card',
-                    content: 'summary',
-                },
-                ...(imageUrl.value ? [{ property: 'og:image', content: imageUrl.value }] : [])
-            ]
+    return {
+        title: meta.value.title || '글 제목 없음',
+        description: meta.value.summary || '기본 요약 설명입니다',
+        image: content.value.imageUrls?.[0] || 'https://yllee.pe.kr/thumbnail.png',
+        url: `https://yllee.pe.kr/view/${id.value}`,
+        type: 'article'
+    }
+})
+
+// Initialize SEO
+const { updateSeo } = useSeo(seoOptions.value)
+
+// Watch for data changes and update SEO + structured data
+watch([meta, content], ([newMeta, newContent]) => {
+    if (newMeta && newContent) {
+        // Update SEO meta tags
+        updateSeo(seoOptions.value)
+
+        // Generate and inject structured data (JSON-LD)
+        const structuredData = generateBlogPostStructuredData({
+            title: newMeta.title,
+            content: newContent.content,
+            summary: newMeta.summary,
+            createDt: newMeta.createDt,
+            updateDt: newMeta.updateDt,
+            category: newMeta.category,
+            id: id.value
         })
+        injectStructuredData(structuredData)
+
+        logger.debug('SEO and structured data updated for post:', newMeta.title)
     }
 })
 
@@ -124,10 +127,10 @@ onMounted(async () => {
                 content.value = contentSnapshot.data()
             }
         } else {
-            console.log('No such document')
+            logger.warn('Document not found:', id.value)
         }
     } catch (error) {
-        console.error("Error fetching document: ", error)
+        logger.error("Error fetching document:", error)
     } finally {
         loading.value = false
     }
@@ -149,13 +152,13 @@ const editMode = (id) => {
             },
         })
     } catch (error) {
-        console.error("Error navigating to edit mode: ", error)
+        logger.error("Error navigating to edit mode:", error)
     }
 }
 
 // Delete the post after confirmation
 const deleteMode = async (id) => {
-    console.log("Deleting meta with ID: ", id)
+    logger.info("Attempting to delete post:", id)
     const isConfirmed = window.confirm("이 글을 삭제하시겠습니까?")
     if (isConfirmed) {
         try {
@@ -172,7 +175,7 @@ const deleteMode = async (id) => {
 
             router.go(-1)
         } catch (error) {
-            console.error("Error deleting document: ", error)
+            logger.error("Error deleting document:", error)
         }
     }
 }

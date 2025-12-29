@@ -1,12 +1,17 @@
 <template lang="">
-    <div class="row"> 
+    <!-- Admin Tools -->
+    <div v-if="isAdmin" class="admin-section">
+        <SitemapGenerator />
+    </div>
+
+    <div class="row">
         <!-- 프로필 이미지 -->
-        <div class="col-12 col-md-4 text-center"> 
+        <div class="col-12 col-md-4 text-center">
             <div class="circle-image">
                 <img alt="profile image" src="../assets/profile.png" />
             </div>
         </div>
-        
+
         <!-- 설명글 -->
         <div class="col-12 col-md-8 description">
             <blockquote class="hero-quote">
@@ -50,18 +55,31 @@
 </template>
 <script setup>
 import { useToast } from "vue-toastification";
+import { useAuthStore } from '../stores/auth.js';
+import { storeToRefs } from 'pinia';
+import SitemapGenerator from './admin/SitemapGenerator.vue';
+import logger from '../utils/logger.js';
 
 const toast = useToast()
+const authStore = useAuthStore()
+const { isAdmin, user, isAuthenticated } = storeToRefs(authStore)
+
+// Debug: Check auth state
+logger.debug('MainPage - isAuthenticated:', isAuthenticated.value)
+logger.debug('MainPage - user:', user.value)
+logger.debug('MainPage - user email:', user.value?.email)
+logger.debug('MainPage - isAdmin:', isAdmin.value)
+logger.debug('MainPage - Expected admin email:', 'ylleel@gmail.com')
 
 const copyMail = (email) => {
-    console.log(email)
+    logger.debug('Copying email:', email)
     navigator.clipboard.writeText(email)
         .then(() => {
-            console.log(`Copied: ${email}`)
+            logger.info(`Email copied: ${email}`)
             toast.info('Email address copied to clipboard!')
         })
         .catch(err => {
-            console.error('Failed to copy: ', err)
+            logger.error('Failed to copy email:', err)
         })
 }
 
@@ -215,6 +233,12 @@ a:hover {
     .description {
         margin-top: var(--spacing-xl);
     }
+}
+
+/* Admin Section */
+.admin-section {
+    max-width: 960px;
+    margin: var(--spacing-xl) auto 0 auto;
 }
 
 @media (max-width: 768px) {

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { observeAuthState, logout as firebaseLogout } from '../firebase/firebase-app.js';
+import logger from '../utils/logger.js';
 
 export const useAuthStore = defineStore('auth', () => {
     // state
@@ -12,7 +13,7 @@ export const useAuthStore = defineStore('auth', () => {
     const isAdmin = computed(() => {
         if (!user.value) return false;
         // This is a temporary admin check. A better approach is to use custom claims in Firebase Auth.
-        return user.value.email === 'ylleel@gmail.com';
+        return user.value.email === 'yonglimlee@naver.com' || user.value.email === 'yonglimlee@daum.net';
     });
 
     // actions
@@ -28,7 +29,7 @@ export const useAuthStore = defineStore('auth', () => {
             await firebaseLogout();
             // The user ref will be automatically updated to null by the observeAuthState listener
         } catch (error) {
-            console.error("Logout failed:", error);
+            logger.error("Logout failed:", error);
             throw error; // Re-throw the error so the component can handle it (e.g., show a toast)
         }
     }
