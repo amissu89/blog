@@ -86,6 +86,33 @@ const routes = [
             requiresAuth: false
         }
     },
+    {
+        path: '/tools',
+        name: 'tools',
+        component: () => import('./components/tools/ToolsPage.vue'),
+        meta: {
+            title: 'Tools',
+            requiresAuth: false
+        }
+    },
+    {
+        path: '/tools/calculator',
+        name: 'calculator',
+        component: () => import('./components/tools/calculator/CalculatorPage.vue'),
+        meta: {
+            title: 'Calculator',
+            requiresAuth: false
+        }
+    },
+    {
+        path: '/tools/calculator/mortgage',
+        name: 'mortgage-calculator',
+        component: () => import('./components/tools/calculator/MortgageCalculator.vue'),
+        meta: {
+            title: 'Mortgage Calculator',
+            requiresAuth: false
+        }
+    },
 ]
 
 const router = createRouter({

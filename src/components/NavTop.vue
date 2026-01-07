@@ -57,6 +57,7 @@ const links = computed(() => [
     { to: '/about', title: 'About' },
     { to: '/posts', title: 'Posts' },
     { to: '/work', title: 'Work' },
+    { to: '/tools', title: 'Tools' },
     { to: '/posting', title: 'Posting', requiresAuth: true, requiresAdmin: true },
     { to: '/sign-in', title: 'Login', requiresAuth: false },
     { to: '#', title: 'Logout', requiresAuth: true },
