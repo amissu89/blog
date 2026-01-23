@@ -1,5 +1,31 @@
 <template>
     <div class="container">
+        <!-- Filter Buttons -->
+        <div class="filter-buttons">
+            <button
+                v-for="filter in filters"
+                :key="filter.value"
+                class="btn btn-filter"
+                :class="{ active: activeFilter === filter.value }"
+                @click="setFilter(filter.value)">
+                {{ filter.label }}
+            </button>
+        </div>
+
+        <!-- Search Box -->
+        <div class="search-box">
+            <input
+                type="text"
+                class="search-input"
+                v-model="searchQuery"
+                placeholder="제목 또는 내용으로 검색..."
+                @input="onSearchInput"
+            />
+            <button v-if="searchQuery" class="search-clear" @click="clearSearch">
+                ✕
+            </button>
+        </div>
+
         <!-- Loading State -->
         <div v-if="loading" class="loading-state">
             <div class="spinner"></div>
@@ -56,7 +82,7 @@
 
             <!-- Pagination Info -->
             <div class="pagination-info">
-                <small>Showing {{ startIndex + 1 }}-{{ endIndex }} of {{ rows.length }} posts</small>
+                <small>Showing {{ startIndex + 1 }}-{{ endIndex }} of {{ filteredRows.length }} posts</small>
             </div>
         </div>
     </div>
@@ -74,23 +100,54 @@ import logger from '../../utils/logger.js'
 const rows = ref([])
 const loading = ref(true)
 const currentPage = ref(1)
+const activeFilter = ref('all')
+const searchQuery = ref('')
 const router = useRouter()
 const route = useRoute()
 
 const ITEMS_PER_PAGE = Constant.ITEMS_PER_PAGE
 
+// Filter options
+const filters = [
+    { label: 'All', value: 'all' },
+    { label: 'Daily', value: 'daily' },
+    { label: 'Work', value: 'work' },
+    { label: 'Study', value: 'study' },
+]
+
+// Filtered rows based on active filter and search query
+const filteredRows = computed(() => {
+    let result = rows.value
+
+    // Filter by category
+    if (activeFilter.value !== 'all') {
+        result = result.filter(row => row.category === activeFilter.value)
+    }
+
+    // Filter by search query
+    if (searchQuery.value.trim()) {
+        const query = searchQuery.value.toLowerCase().trim()
+        result = result.filter(row =>
+            row.title?.toLowerCase().includes(query) ||
+            row.summary?.toLowerCase().includes(query)
+        )
+    }
+
+    return result
+})
+
 // Computed properties for pagination
-const totalPages = computed(() => Math.ceil(rows.value.length / ITEMS_PER_PAGE))
+const totalPages = computed(() => Math.ceil(filteredRows.value.length / ITEMS_PER_PAGE))
 
 const startIndex = computed(() => (currentPage.value - 1) * ITEMS_PER_PAGE)
 
 const endIndex = computed(() => {
     const end = startIndex.value + ITEMS_PER_PAGE
-    return end > rows.value.length ? rows.value.length : end
+    return end > filteredRows.value.length ? filteredRows.value.length : end
 })
 
 const paginatedRows = computed(() => {
-    return rows.value.slice(startIndex.value, endIndex.value)
+    return filteredRows.value.slice(startIndex.value, endIndex.value)
 })
 
 // Show max 5 page numbers at a time
@@ -155,6 +212,20 @@ const goToPage = (page) => {
     }
 }
 
+const setFilter = (filter) => {
+    activeFilter.value = filter
+    currentPage.value = 1 // Reset to first page when filter changes
+}
+
+const onSearchInput = () => {
+    currentPage.value = 1 // Reset to first page when search changes
+}
+
+const clearSearch = () => {
+    searchQuery.value = ''
+    currentPage.value = 1
+}
+
 const loadPost = (postId) => {
     router.push({
         name: 'viewer',
@@ -170,6 +241,88 @@ const loadPost = (postId) => {
 
 
 <style scoped>
+/* Filter Buttons */
+.filter-buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+}
+
+.btn-filter {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border: 2px solid var(--color-border);
+    background: var(--color-card);
+    color: var(--color-text);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.btn-filter:hover {
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+    border-color: var(--color-accent);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-filter.active {
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+    border-color: var(--color-accent);
+    color: white;
+}
+
+/* Search Box */
+.search-box {
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto var(--spacing-xl);
+}
+
+.search-input {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    padding-right: var(--spacing-2xl);
+    border: 2px solid var(--color-border);
+    background: var(--color-card);
+    color: var(--color-text);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    transition: all var(--transition-base);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(var(--color-accent-rgb, 139, 90, 43), 0.1);
+}
+
+.search-input::placeholder {
+    color: var(--color-text-tertiary);
+}
+
+.search-clear {
+    position: absolute;
+    right: var(--spacing-sm);
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    line-height: 1;
+    transition: color var(--transition-base);
+}
+
+.search-clear:hover {
+    color: var(--color-accent);
+}
+
 /* Loading State */
 .loading-state {
     display: flex;
@@ -245,6 +398,7 @@ const loadPost = (postId) => {
     vertical-align: middle;
     color: var(--color-text);
     border: none;
+    background-color: var(--color-card);
 }
 
 .table td:nth-child(2) {
@@ -377,6 +531,23 @@ const loadPost = (postId) => {
     .btn-pagination,
     .btn-page-number {
         padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: var(--font-size-xs);
+    }
+
+    .filter-buttons {
+        gap: var(--spacing-xs);
+    }
+
+    .btn-filter {
+        padding: var(--spacing-xs) var(--spacing-md);
+        font-size: var(--font-size-xs);
+    }
+
+    .search-box {
+        max-width: 100%;
+    }
+
+    .search-input {
         font-size: var(--font-size-xs);
     }
 }

@@ -13,29 +13,11 @@ const routes = [
         }
     },
     {
-        path: '/about',
-        name: 'about',
-        component: () => import('./components/about/AboutPage.vue'),
-        meta: {
-            title: 'About',
-            requiresAuth: false
-        }
-    },
-    {
         path: '/posts',
         name: 'posts',
         component: () => import('./components/post/PostList.vue'),
         meta: {
             title: 'Posts',
-            requiresAuth: false
-        }
-    },
-    {
-        path: '/work',
-        name: 'work',
-        component: () => import('./components/work/WorkPage.vue'),
-        meta: {
-            title: 'Work',
             requiresAuth: false
         }
     },

@@ -4,7 +4,7 @@
     <select id="post-category" class="form-select" aria-label="Select category of posting" v-model="postData.category">
       <option value="daily">Daily</option>
       <option value="work">Work</option>
-      <option value="review">Review</option>
+      <option value="study">Study</option>
     </select>
 
     <div class="mb-3">
@@ -50,6 +50,7 @@ import { createPostMeta } from "../../models/post-meta.js";
 import { createPostContent } from '@/models/post-content';
 import { useToast } from 'vue-toastification'
 import imageCompression from 'browser-image-compression';
+import heic2any from 'heic2any';
 import logger from '../../utils/logger.js';
 
 const router = useRouter();
@@ -223,13 +224,33 @@ const scheduleDraftAutoSave = () => {
 
 const handleImageUpload = async (blob, callback) => {
   const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+  const heicTypes = ['image/heic', 'image/heif'];
 
-  if (!allowedTypes.includes(blob.type)) {
-    toast.error('지원하지 않는 이미지 형식입니다.');
+  let imageBlob = blob;
+
+  // HEIC/HEIF 포맷인 경우 JPEG로 변환
+  if (heicTypes.includes(blob.type) || blob.name?.toLowerCase().endsWith('.heic') || blob.name?.toLowerCase().endsWith('.heif')) {
+    try {
+      toast.info('HEIC 이미지를 변환 중입니다...');
+      const convertedBlob = await heic2any({
+        blob: blob,
+        toType: 'image/jpeg',
+        quality: 0.9,
+      });
+      // heic2any는 배열 또는 단일 Blob을 반환할 수 있음
+      imageBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+      logger.debug('HEIC converted to JPEG successfully');
+    } catch (error) {
+      logger.error('HEIC conversion failed:', error);
+      toast.error('HEIC 이미지 변환에 실패했습니다.');
+      return;
+    }
+  } else if (!allowedTypes.includes(blob.type)) {
+    toast.error('지원하지 않는 이미지 형식입니다. (JPG, PNG, WebP, HEIC 지원)');
     return;
   }
 
-  if (blob.size > Constant.IMG_MAX_BYTE) {
+  if (imageBlob.size > Constant.IMG_MAX_BYTE) {
     toast.error("이미지 하나는 5MB 미만이어야합니다.");
     return;
   }
@@ -241,7 +262,7 @@ const handleImageUpload = async (blob, callback) => {
   };
 
   try {
-    const compressedBlob = await imageCompression(blob, options);
+    const compressedBlob = await imageCompression(imageBlob, options);
 
     const timestamp = Date.now();
     const extension = compressedBlob.type.split('/').pop();

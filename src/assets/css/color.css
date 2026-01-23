@@ -72,12 +72,140 @@
   --transition-slow: 0.3s ease;
 }
 
-/* Dark mode variant (optional for future) */
+/* Dark mode variant */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #2B2826;
-    --color-card: #3A3635;
+    /* Primary Colors - Warm neutrals (dark) */
+    --color-primary: #F5F1ED;
+    --color-primary-light: #D4CEC9;
+    --color-accent: #E8927A;        /* Slightly brighter coral for dark mode */
+    --color-accent-hover: #F0A08A;
+    --color-accent-light: #5C4A44;
+
+    /* Text Colors (dark) */
     --color-text: #F5F1ED;
+    --color-text-secondary: #C4BFBA;
+    --color-text-tertiary: #9B9390;
+    --color-text-muted: #7A7572;
+
+    /* Background Colors - Warm dark tones */
+    --color-bg: #1E1C1B;            /* Dark warm background */
+    --color-bg-secondary: #2B2826;  /* Slightly lighter */
+    --color-card: #332F2D;          /* Card background */
     --color-border: #4A4542;
+    --color-border-light: #3D3936;
+
+    /* Semantic Colors (adjusted for dark mode) */
+    --color-success: #8FC4A8;       /* Brighter warm green */
+    --color-warning: #F5B07A;       /* Brighter warm orange */
+    --color-error: #E89090;         /* Brighter warm red */
+    --color-info: #8FB5D0;          /* Brighter warm blue */
+
+    /* Shadows - Darker, more subtle */
+    --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.2);
+    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.25);
+    --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.35);
+    --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.4);
+
+    /* Interactive shadows with warm glow (dark mode) */
+    --shadow-glow: 0 4px 12px rgba(232, 146, 122, 0.2);
+    --shadow-hover: 0 6px 14px rgba(0, 0, 0, 0.35);
+  }
+
+  /* Toast UI Editor/Viewer Dark Mode Override */
+  .toastui-editor-contents,
+  .toastui-editor-viewer {
+    color: #F5F1ED !important;
+    background-color: transparent !important;
+  }
+
+  .toastui-editor-contents p,
+  .toastui-editor-contents li,
+  .toastui-editor-contents td,
+  .toastui-editor-contents th {
+    color: #F5F1ED !important;
+  }
+
+  .toastui-editor-contents h1,
+  .toastui-editor-contents h2,
+  .toastui-editor-contents h3,
+  .toastui-editor-contents h4,
+  .toastui-editor-contents h5,
+  .toastui-editor-contents h6 {
+    color: #F5F1ED !important;
+    border-bottom-color: #4A4542 !important;
+  }
+
+  .toastui-editor-contents a {
+    color: #E8927A !important;
+  }
+
+  .toastui-editor-contents blockquote {
+    border-left-color: #E8927A !important;
+    color: #C4BFBA !important;
+    background-color: #2B2826 !important;
+  }
+
+  .toastui-editor-contents pre {
+    background-color: #2B2826 !important;
+    border-color: #4A4542 !important;
+  }
+
+  .toastui-editor-contents code {
+    background-color: #2B2826 !important;
+    color: #E8927A !important;
+  }
+
+  .toastui-editor-contents table {
+    border-color: #4A4542 !important;
+  }
+
+  .toastui-editor-contents table th,
+  .toastui-editor-contents table td {
+    border-color: #4A4542 !important;
+  }
+
+  .toastui-editor-contents table th {
+    background-color: #2B2826 !important;
+  }
+
+  .toastui-editor-contents hr {
+    border-color: #4A4542 !important;
+  }
+
+  /* Form elements dark mode */
+  input, select, textarea {
+    background-color: var(--color-card) !important;
+    color: var(--color-text) !important;
+    border-color: var(--color-border) !important;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-text-tertiary) !important;
+  }
+
+  /* Bootstrap overrides for dark mode */
+  .form-control,
+  .form-select {
+    background-color: var(--color-card) !important;
+    color: var(--color-text) !important;
+    border-color: var(--color-border) !important;
+  }
+
+  .form-label {
+    color: var(--color-text) !important;
+  }
+
+  .btn-outline-dark {
+    color: var(--color-text) !important;
+    border-color: var(--color-border) !important;
+  }
+
+  .btn-outline-dark:hover {
+    background-color: var(--color-accent) !important;
+    border-color: var(--color-accent) !important;
+    color: white !important;
   }
 }
