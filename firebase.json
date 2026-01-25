@@ -13,7 +13,10 @@
     "rewrites": [
       {
         "source": "/sitemap.xml",
-        "function": "serveSitemap"
+        "function": {
+          "functionId": "serveSitemap",
+          "region": "asia-northeast3"
+        }
       },
       {
         "source": "/robots.txt",

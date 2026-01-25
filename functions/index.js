@@ -19,10 +19,16 @@ async function generateSitemap() {
         // 1. Firestore에서 전체 문서 가져오기
         const snapshot = await db.collection(BOARD_INFO).get();
 
-        const links = [];
+        const links = [
+            // 정적 페이지
+            { url: '/', changefreq: 'daily', priority: 1.0 },
+            { url: '/posts', changefreq: 'daily', priority: 0.9 },
+        ];
+
+        // 블로그 글 추가
         snapshot.forEach(doc => {
             links.push({
-                url: `/posts/${doc.id}`,
+                url: `/view/${doc.id}`,
                 changefreq: 'weekly',
                 priority: 0.8,
                 lastmod: doc.data().createDt?.toDate?.().toISOString?.() || new Date().toISOString(),
@@ -34,7 +40,7 @@ async function generateSitemap() {
         const xml = await streamToPromise(Readable.from(links).pipe(stream)).then(data => data.toString());
 
         // 3. Firebase Storage에 저장
-        const bucket = admin.storage().bucket(); // 기본 버킷 사용
+        const bucket = admin.storage().bucket();
         const file = bucket.file('sitemap.xml');
 
         await file.save(xml, {
@@ -44,7 +50,7 @@ async function generateSitemap() {
             public: true,
         });
 
-        console.log('✅ sitemap.xml updated successfully.');
+        console.log(`✅ sitemap.xml updated successfully. (${links.length} URLs)`);
     } catch (error) {
         console.error('❌ Failed to generate sitemap:', error);
     }

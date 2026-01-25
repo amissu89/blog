@@ -1,8 +1,4 @@
 <template lang="">
-    <!-- Admin Tools -->
-    <div v-if="isAdmin" class="admin-section">
-        <SitemapGenerator />
-    </div>
 
     <div class="row">
         <!-- 프로필 이미지 -->
@@ -57,7 +53,6 @@
 import { useToast } from "vue-toastification";
 import { useAuthStore } from '../stores/auth.js';
 import { storeToRefs } from 'pinia';
-import SitemapGenerator from './admin/SitemapGenerator.vue';
 import logger from '../utils/logger.js';
 
 const toast = useToast()
