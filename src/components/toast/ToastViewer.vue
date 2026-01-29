@@ -32,3 +32,34 @@
     min-height:50vh;
   }
   </style>
+
+  <style>
+  /* Toast UI Viewer 폰트 사이즈 */
+  .toastui-editor-contents {
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .toastui-editor-contents p,
+  .toastui-editor-contents li,
+  .toastui-editor-contents td,
+  .toastui-editor-contents th {
+    font-size: 16px;
+  }
+
+  .toastui-editor-contents h1 {
+    font-size: 28px;
+  }
+
+  .toastui-editor-contents h2 {
+    font-size: 24px;
+  }
+
+  .toastui-editor-contents h3 {
+    font-size: 20px;
+  }
+
+  .toastui-editor-contents h4 {
+    font-size: 18px;
+  }
+  </style>
