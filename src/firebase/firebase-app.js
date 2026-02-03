@@ -154,12 +154,13 @@ export async function addDocument(collectionName, data) {
  * @param {string} collectionName - Name of the collection
  * @param {string} documentId - ID of the document
  * @param {Object} data - Document data to set
+ * @param {Object} options - Options (e.g., { merge: true })
  * @returns {Promise<void>}
  */
-export async function setDocument(collectionName, documentId, data) {
+export async function setDocument(collectionName, documentId, data, options = {}) {
     try {
         const docRef = doc(db, collectionName, documentId);
-        await setDoc(docRef, data);
+        await setDoc(docRef, data, options);
         logger.info('Document successfully set');
     } catch (error) {
         logger.error('Error setting document:', error);
@@ -235,12 +236,14 @@ export async function getAllDocumentsInCollection(collectionRef) {
 
 /**
  * Get all documents from a collection as an array of objects
- * @param {string} collectionName - Name of the collection
+ * @param {string} collectionPath - Path to the collection (supports subcollections like 'users/owner/holdings')
  * @returns {Promise<Array<{id: string, ...}>} Array of documents with IDs
  */
-export async function getDocuments(collectionName) {
+export async function getDocuments(collectionPath) {
     try {
-        const collectionRef = collection(db, collectionName);
+        // 경로를 '/'로 분리하여 collection 함수에 전달
+        const pathSegments = collectionPath.split('/');
+        const collectionRef = collection(db, ...pathSegments);
         const querySnapshot = await getDocs(collectionRef);
         const documents = [];
         querySnapshot.forEach((doc) => {
@@ -248,7 +251,7 @@ export async function getDocuments(collectionName) {
         });
         return documents;
     } catch (error) {
-        logger.error(`Error getting documents from collection: ${collectionName}`, error);
+        logger.error(`Error getting documents from collection: ${collectionPath}`, error);
         throw error;
     }
 }

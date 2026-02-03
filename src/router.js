@@ -95,6 +95,15 @@ const routes = [
             requiresAuth: false
         }
     },
+    {
+        path: '/my-index',
+        name: 'my-index',
+        component: () => import('./components/my-index/MyIndexPage.vue'),
+        meta: {
+            title: 'My Index',
+            requiresAuth: true
+        }
+    },
 ]
 
 const router = createRouter({
