@@ -10,8 +10,71 @@ admin.initializeApp();
 const db = admin.firestore();
 
 const BOARD_INFO = "board-info"
+const BOARD_CONTENT = "board-content"
 const CUSTOM_DOMAIN = "https://yllee.pe.kr"
 const REGION = "asia-northeast3"
+
+// SNS 크롤러 User-Agent 목록
+const CRAWLER_USER_AGENTS = [
+    'facebookexternalhit',
+    'facebot',
+    'twitterbot',
+    'kakaotalk-scrap',
+    'kakao',
+    'slackbot',
+    'telegrambot',
+    'discordbot',
+    'linkedinbot',
+    'whatsapp',
+    'line-poker',
+    'embedly',
+];
+
+function isCrawler(userAgent) {
+    if (!userAgent) return false;
+    const ua = userAgent.toLowerCase();
+    return CRAWLER_USER_AGENTS.some(crawler => ua.includes(crawler));
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function buildOgHtml({ title, description, image, url }) {
+    const safeTitle = escapeHtml(title);
+    const safeDescription = escapeHtml(description);
+    const safeImage = escapeHtml(image);
+    const safeUrl = escapeHtml(url);
+
+    return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <title>${safeTitle} | Rocky's Blog</title>
+    <meta name="description" content="${safeDescription}">
+    <meta property="og:title" content="${safeTitle}">
+    <meta property="og:description" content="${safeDescription}">
+    <meta property="og:image" content="${safeImage}">
+    <meta property="og:url" content="${safeUrl}">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Rocky's Blog">
+    <meta property="og:locale" content="ko_KR">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${safeTitle}">
+    <meta name="twitter:description" content="${safeDescription}">
+    <meta name="twitter:image" content="${safeImage}">
+</head>
+<body>
+    <script>window.location.href="${safeUrl}";</script>
+</body>
+</html>`;
+}
 
 // My Index 설정
 const config = require('./config.js');
@@ -77,6 +140,75 @@ exports.generateSitemapOnDelete = onDocumentDeleted(
     },
     async (event) => {
         await generateSitemap();
+    }
+);
+
+// ============================================
+// OG 메타 태그 - SNS 크롤러용 SSR
+// ============================================
+exports.serveOgMeta = onRequest(
+    {
+        region: REGION,
+    },
+    async (req, res) => {
+        try {
+            // URL에서 포스트 ID 추출 (/view/abc123 → abc123)
+            const pathParts = req.path.split('/');
+            const postId = pathParts[pathParts.length - 1];
+
+            // 크롤러가 아니면 index.html을 Hosting에서 가져와 응답 (SPA 동작)
+            const userAgent = req.headers['user-agent'] || '';
+            if (!isCrawler(userAgent)) {
+                const indexRes = await fetch(`${CUSTOM_DOMAIN}/index.html`);
+                const indexHtml = await indexRes.text();
+                res.set('Content-Type', 'text/html; charset=utf-8');
+                res.status(200).send(indexHtml);
+                return;
+            }
+
+            if (!postId) {
+                res.status(404).send('Post not found');
+                return;
+            }
+
+            // Firestore에서 포스트 정보 조회
+            const metaDoc = await db.collection(BOARD_INFO).doc(postId).get();
+            if (!metaDoc.exists) {
+                res.status(404).send('Post not found');
+                return;
+            }
+
+            const meta = metaDoc.data();
+
+            // 이미지 URL 조회 (board-content에서 첫 번째 이미지)
+            let imageUrl = `${CUSTOM_DOMAIN}/thumbnail.png`;
+            try {
+                const contentDoc = await db.collection(BOARD_CONTENT).doc(postId).get();
+                if (contentDoc.exists) {
+                    const contentData = contentDoc.data();
+                    if (contentData.imageUrls && contentData.imageUrls.length > 0) {
+                        imageUrl = contentData.imageUrls[0];
+                    }
+                }
+            } catch (e) {
+                // 이미지 조회 실패 시 기본 썸네일 사용
+            }
+
+            const html = buildOgHtml({
+                title: meta.title || "Rocky's Blog",
+                description: meta.summary || "Rocky의 일하는 이야기",
+                image: imageUrl,
+                url: `${CUSTOM_DOMAIN}/view/${postId}`,
+            });
+
+            res.set('Content-Type', 'text/html; charset=utf-8');
+            res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+            res.status(200).send(html);
+
+        } catch (error) {
+            console.error('OG meta error:', error);
+            res.status(500).send('Internal Server Error');
+        }
     }
 );
 
