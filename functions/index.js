@@ -15,7 +15,7 @@ const CUSTOM_DOMAIN = "https://yllee.pe.kr"
 const REGION = "asia-northeast3"
 
 // SNS 크롤러 User-Agent 목록
-const CRAWLER_USER_AGENTS = [
+const SNS_CRAWLER_USER_AGENTS = [
     'facebookexternalhit',
     'facebot',
     'twitterbot',
@@ -30,10 +30,27 @@ const CRAWLER_USER_AGENTS = [
     'embedly',
 ];
 
+// 검색엔진 크롤러 User-Agent 목록
+const SEARCH_ENGINE_CRAWLERS = [
+    'googlebot',
+    'bingbot',
+    'yandexbot',
+    'duckduckbot',
+    'baiduspider',
+    'naverbot',
+    'yeti',
+];
+
 function isCrawler(userAgent) {
     if (!userAgent) return false;
     const ua = userAgent.toLowerCase();
-    return CRAWLER_USER_AGENTS.some(crawler => ua.includes(crawler));
+    return [...SNS_CRAWLER_USER_AGENTS, ...SEARCH_ENGINE_CRAWLERS].some(crawler => ua.includes(crawler));
+}
+
+function isSearchEngine(userAgent) {
+    if (!userAgent) return false;
+    const ua = userAgent.toLowerCase();
+    return SEARCH_ENGINE_CRAWLERS.some(crawler => ua.includes(crawler));
 }
 
 function escapeHtml(str) {
@@ -72,6 +89,70 @@ function buildOgHtml({ title, description, image, url }) {
 </head>
 <body>
     <script>window.location.href="${safeUrl}";</script>
+</body>
+</html>`;
+}
+
+function buildSeoHtml({ title, description, image, url, content, category, createDt, updateDt }) {
+    const safeTitle = escapeHtml(title);
+    const safeDescription = escapeHtml(description);
+    const safeImage = escapeHtml(image);
+    const safeUrl = escapeHtml(url);
+
+    const jsonLd = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        'headline': title,
+        'description': description,
+        'image': image,
+        'author': {
+            '@type': 'Person',
+            'name': 'Rocky Lee',
+            'url': CUSTOM_DOMAIN
+        },
+        'datePublished': createDt,
+        'dateModified': updateDt || createDt,
+        'publisher': {
+            '@type': 'Organization',
+            'name': "Rocky's Blog",
+            'logo': {
+                '@type': 'ImageObject',
+                'url': `${CUSTOM_DOMAIN}/thumbnail.png`
+            }
+        },
+        'mainEntityOfPage': {
+            '@type': 'WebPage',
+            '@id': url
+        },
+        'articleSection': category
+    });
+
+    return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <title>${safeTitle} | Rocky's Blog</title>
+    <meta name="description" content="${safeDescription}">
+    <link rel="canonical" href="${safeUrl}">
+    <meta property="og:title" content="${safeTitle}">
+    <meta property="og:description" content="${safeDescription}">
+    <meta property="og:image" content="${safeImage}">
+    <meta property="og:url" content="${safeUrl}">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Rocky's Blog">
+    <meta property="og:locale" content="ko_KR">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${safeTitle}">
+    <meta name="twitter:description" content="${safeDescription}">
+    <meta name="twitter:image" content="${safeImage}">
+    <script type="application/ld+json">${jsonLd}</script>
+</head>
+<body>
+    <article>
+        <h1>${safeTitle}</h1>
+        <p>${safeDescription}</p>
+        <div>${content || ''}</div>
+    </article>
 </body>
 </html>`;
 }
@@ -144,7 +225,7 @@ exports.generateSitemapOnDelete = onDocumentDeleted(
 );
 
 // ============================================
-// OG 메타 태그 - SNS 크롤러용 SSR
+// OG 메타 태그 - SNS 크롤러 + 검색엔진 SSR
 // ============================================
 exports.serveOgMeta = onRequest(
     {
@@ -180,8 +261,9 @@ exports.serveOgMeta = onRequest(
 
             const meta = metaDoc.data();
 
-            // 이미지 URL 조회 (board-content에서 첫 번째 이미지)
+            // 이미지 URL 및 본문 콘텐츠 조회
             let imageUrl = `${CUSTOM_DOMAIN}/thumbnail.png`;
+            let postContent = '';
             try {
                 const contentDoc = await db.collection(BOARD_CONTENT).doc(postId).get();
                 if (contentDoc.exists) {
@@ -189,17 +271,42 @@ exports.serveOgMeta = onRequest(
                     if (contentData.imageUrls && contentData.imageUrls.length > 0) {
                         imageUrl = contentData.imageUrls[0];
                     }
+                    if (contentData.content) {
+                        postContent = contentData.content;
+                    }
                 }
             } catch (e) {
-                // 이미지 조회 실패 시 기본 썸네일 사용
+                // 조회 실패 시 기본값 사용
             }
 
-            const html = buildOgHtml({
-                title: meta.title || "Rocky's Blog",
-                description: meta.summary || "Rocky의 일하는 이야기",
-                image: imageUrl,
-                url: `${CUSTOM_DOMAIN}/view/${postId}`,
-            });
+            const postUrl = `${CUSTOM_DOMAIN}/view/${postId}`;
+            const postTitle = meta.title || "Rocky's Blog";
+            const postDescription = meta.summary || "Rocky의 일하는 이야기";
+            const createDt = meta.createDt?.toDate?.().toISOString?.() || new Date().toISOString();
+            const updateDt = meta.updateDt?.toDate?.().toISOString?.() || createDt;
+
+            let html;
+            if (isSearchEngine(userAgent)) {
+                // 검색엔진: 본문 콘텐츠 + 구조화 데이터 포함
+                html = buildSeoHtml({
+                    title: postTitle,
+                    description: postDescription,
+                    image: imageUrl,
+                    url: postUrl,
+                    content: postContent,
+                    category: meta.category || '',
+                    createDt,
+                    updateDt,
+                });
+            } else {
+                // SNS 크롤러: OG 메타태그만
+                html = buildOgHtml({
+                    title: postTitle,
+                    description: postDescription,
+                    image: imageUrl,
+                    url: postUrl,
+                });
+            }
 
             res.set('Content-Type', 'text/html; charset=utf-8');
             res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
