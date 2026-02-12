@@ -96,6 +96,15 @@ const routes = [
         }
     },
     {
+        path: '/profile',
+        name: 'profile',
+        component: () => import('./components/profile/ProfilePage.vue'),
+        meta: {
+            title: 'Profile',
+            requiresAuth: false
+        }
+    },
+    {
         path: '/my-index',
         name: 'my-index',
         component: () => import('./components/my-index/MyIndexPage.vue'),

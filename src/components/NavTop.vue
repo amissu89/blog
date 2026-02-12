@@ -55,6 +55,7 @@ const { logout } = authStore
 const links = computed(() => [
     { to: '/', title: 'Home' },
     { to: '/posts', title: 'Posts' },
+    { to: '/profile', title: 'Profile' },
     { to: '/tools', title: 'Tools' },
     { to: '/posting', title: 'Posting', requiresAuth: true, requiresAdmin: true },
     { to: '/my-index', title: 'My Index', requiresAuth: true, requiresAdmin: true },

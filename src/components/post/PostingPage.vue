@@ -12,12 +12,12 @@
       <input type="text" class="form-control" id="post-title" v-model="postData.title" />
     </div>
 
+    <ToastEditor v-model="postData.content" @add-image="handleImageUpload" @update:modelValue="updateContent" />
+
     <div class="mb-3">
       <label for="post-summary" class="form-label">설명</label>
       <input type="text" class="form-control" id="post-summary" v-model="postData.summary" maxlength="150" placeholder="이 글의 핵심내용 간단히 요약"/>
     </div>
-
-    <ToastEditor v-model="postData.content" @add-image="handleImageUpload" @update:modelValue="updateContent" />
 
     <div class="buttons">
       <button type="button" class="btn btn-outline-dark" @click="savePost">

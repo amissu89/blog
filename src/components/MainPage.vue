@@ -1,249 +1,294 @@
-<template lang="">
+<template>
+    <div class="container">
+        <h2 class="section-title">Recent Posts</h2>
 
-    <div class="row">
-        <!-- 프로필 이미지 -->
-        <div class="col-12 col-md-4 text-center">
-            <div class="circle-image">
-                <img alt="profile image" src="../assets/profile.png" />
+        <!-- Loading State -->
+        <div v-if="loading" class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading posts...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div v-else-if="recentPosts.length === 0" class="empty-state">
+            <h3>No posts yet</h3>
+            <p>Check back soon for new content!</p>
+        </div>
+
+        <!-- Post List -->
+        <div v-else class="post-list">
+            <div
+                v-for="post in recentPosts"
+                :key="post.id"
+                class="post-card"
+                @click="goToPost(post.id)"
+            >
+                <div class="post-thumbnail">
+                    <img :src="post.thumbnail || defaultThumbnail" :alt="post.title" />
+                </div>
+                <div class="post-info">
+                    <h3 class="post-title">{{ post.title }}</h3>
+                    <p class="post-excerpt">{{ post.excerpt }}</p>
+                    <span class="post-date">{{ post.date }}</span>
+                </div>
             </div>
         </div>
 
-        <!-- 설명글 -->
-        <div class="col-12 col-md-8 description">
-            <blockquote class="hero-quote">
-                <p>어제보다 나은 내가 됩시다.</p>
-                <p>Let's be better than yesterday.</p>
-            </blockquote>
-
-            <p class="bio"> 살면서 제일 중요한 것은 가족과 내 주변의 사람들과의 관계입니다.<br/>
-                디지털 세계에서 일하지만 현실 세계의 관계들이 더욱 중요합니다.<br/>
-                일을 어떻게 하면 더 잘할지에 대해 항상 고민하고 있습니다.</p>
-
-            <p class="bio"> I think the most important thing in life is my family and relationships with people around me.<br/>
-                I work in the digital world, but relationships in the real world are even more important.<br/>
-                I am a developer who is thinking about how to do a good job.</p>
-
-            <h5>Contact. </h5>
-                <ul>
-                <li @click="copyMail('yonglimlee@gmail.com')" class="clickable"><a href="#"> 📧 yonglimlee@gmail.com </a></li>
-                </ul>
-
-                <h5>Channel. </h5>
-                <ul>
-                <li> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
-  <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
-</svg> 
-                    <a href="https://github.com/amissu89" target="_blank" style="text-decoration:none;">
-                         @amissu89  </a> 
-                        </li> 
-                <li> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter-x" viewBox="0 0 16 16">
-  <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
-</svg>    <a href="https://x.com/amissu89" target="_blank"> @amissu89</a> </li>
-                <li> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
-  <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/>
-</svg> <a href="https://www.instagram.com/amissu89/" target="_blank"> @amissu89 </a></li>
-
-            <li> 📻<a href="https://youtube.com/channel/UC_Otsw37_JmNC0mNiOsFXSA?si=2g-Vnrs-OI_Nx9A5" target="_blank">Podcast 보통부부(Botong Booboo) </a> </li>
-            </ul>
+        <!-- View All Button -->
+        <div v-if="recentPosts.length > 0" class="view-all">
+            <button class="btn btn-view-all" @click="$router.push('/posts')">
+                전체 글 보기 →
+            </button>
         </div>
     </div>
-    
 </template>
+
 <script setup>
-import { useToast } from "vue-toastification";
-import { useAuthStore } from '../stores/auth.js';
-import { storeToRefs } from 'pinia';
-import logger from '../utils/logger.js';
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { getCollection, getDocumentsByQuery, getDocument } from '../firebase/firebase-app.js'
+import { buildQueryWithOrdering } from '../firebase/firebase-app.js'
+import Constant from '../constant.js'
+import { formatterForDatetime } from '../utility.js'
+import logger from '../utils/logger.js'
 
-const toast = useToast()
-const authStore = useAuthStore()
-const { isAdmin, user, isAuthenticated } = storeToRefs(authStore)
+const router = useRouter()
+const recentPosts = ref([])
+const loading = ref(true)
+const defaultThumbnail = '/thumbnail.png'
 
-// Debug: Check auth state
-logger.debug('MainPage - isAuthenticated:', isAuthenticated.value)
-logger.debug('MainPage - user:', user.value)
-logger.debug('MainPage - user email:', user.value?.email)
-logger.debug('MainPage - isAdmin:', isAdmin.value)
-logger.debug('MainPage - Expected admin email:', 'ylleel@gmail.com')
+const RECENT_POST_COUNT = 5
+const EXCERPT_LENGTH = 30
 
-const copyMail = (email) => {
-    logger.debug('Copying email:', email)
-    navigator.clipboard.writeText(email)
-        .then(() => {
-            logger.info(`Email copied: ${email}`)
-            toast.info('Email address copied to clipboard!')
-        })
-        .catch(err => {
-            logger.error('Failed to copy email:', err)
-        })
+function stripHtml(html) {
+    const tmp = document.createElement('div')
+    tmp.innerHTML = html
+    return tmp.textContent || tmp.innerText || ''
 }
 
+function getExcerpt(content, maxLength) {
+    const plainText = stripHtml(content).trim()
+    if (plainText.length <= maxLength) return plainText
+    return plainText.substring(0, maxLength) + '.....'
+}
+
+onMounted(async () => {
+    try {
+        const collectionRef = getCollection(Constant.BOARD_INFO)
+        const q = buildQueryWithOrdering(collectionRef, 'createDt', Constant.DESC)
+        const querySnapshot = await getDocumentsByQuery(q)
+
+        const posts = []
+        querySnapshot.forEach((doc) => {
+            posts.push({ id: doc.id, ...doc.data() })
+        })
+
+        // 최근 5개만
+        const recent = posts.slice(0, RECENT_POST_COUNT)
+
+        // 각 게시글의 content에서 썸네일과 본문 도입부 가져오기
+        const postPromises = recent.map(async (post) => {
+            let thumbnail = null
+            let excerpt = post.summary || ''
+
+            try {
+                const contentDoc = await getDocument(Constant.BOARD_CONTENT, post.id)
+                if (contentDoc.exists()) {
+                    const contentData = contentDoc.data()
+                    if (contentData.imageUrls && contentData.imageUrls.length > 0) {
+                        thumbnail = contentData.imageUrls[0]
+                    }
+                    if (contentData.content) {
+                        excerpt = getExcerpt(contentData.content, EXCERPT_LENGTH)
+                    }
+                }
+            } catch (e) {
+                logger.error('Failed to fetch post content:', e)
+            }
+
+            return {
+                id: post.id,
+                title: post.title,
+                thumbnail,
+                excerpt,
+                date: formatterForDatetime(new Date(post.createDt)),
+            }
+        })
+
+        recentPosts.value = await Promise.all(postPromises)
+    } catch (error) {
+        logger.error('Failed to fetch recent posts:', error)
+    } finally {
+        loading.value = false
+    }
+})
+
+const goToPost = (postId) => {
+    router.push({ name: 'viewer', params: { id: postId } })
+}
 </script>
+
 <style scoped>
-.row {
-    background-color: var(--color-card);
-    border: 1px solid var(--color-border-light);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-xl);
-    margin: var(--spacing-xl) auto;
-    box-shadow: var(--shadow-md);
-    max-width: 960px;
-    transition: box-shadow var(--transition-slow);
+.section-title {
+    text-align: center;
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-2xl);
 }
 
-.row:hover {
-    box-shadow: var(--shadow-lg);
+/* Loading */
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-3xl);
 }
 
-/* Hero Quote Styling */
-.hero-quote {
-    margin: 0 0 var(--spacing-xl) 0;
-    padding: var(--spacing-lg);
-    padding-left: var(--spacing-xl);
-    border-left: 4px solid var(--color-accent);
-    background: linear-gradient(to right, var(--color-bg-secondary), transparent);
-    border-radius: var(--radius-sm);
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--color-border);
+    border-top-color: var(--color-accent);
+    border-radius: var(--radius-full);
+    animation: spin 0.8s linear infinite;
 }
 
-.hero-quote p {
-    font-style: italic;
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-state p {
+    margin-top: var(--spacing-lg);
     color: var(--color-text-secondary);
-    font-size: var(--font-size-lg);
-    line-height: 1.6;
-    margin: 0;
 }
 
-.hero-quote p:first-child {
+/* Empty */
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-3xl);
+}
+
+.empty-state h3 {
+    color: var(--color-primary);
     margin-bottom: var(--spacing-sm);
 }
 
-/* Bio Text */
-.description p.bio {
-    font-size: var(--font-size-base);
-    color: var(--color-text);
-    line-height: 1.7;
-    margin-bottom: var(--spacing-lg);
-}
-
-/* Section Headers */
-.description h5 {
-    font-size: var(--font-size-xl);
-    font-weight: 600;
-    color: var(--color-primary);
-    margin-bottom: var(--spacing-md);
-    position: relative;
-    display: inline-block;
-}
-
-.description h5::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 40px;
-    height: 3px;
-    background: linear-gradient(to right, var(--color-accent), var(--color-accent-light));
-    border-radius: var(--radius-full);
-}
-
-.description h5:not(:first-of-type) {
-    margin-top: var(--spacing-2xl);
-}
-
-/* List Styling */
-ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-ul li {
-    margin-bottom: var(--spacing-md);
-    font-size: var(--font-size-base);
-    color: var(--color-text);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    transition: transform var(--transition-base);
-}
-
-ul li:hover {
-    transform: translateX(4px);
-}
-
-ul li.clickable {
-    cursor: pointer;
-}
-
-ul li svg {
-    flex-shrink: 0;
+.empty-state p {
     color: var(--color-text-secondary);
-    transition: color var(--transition-base);
 }
 
-ul li:hover svg {
-    color: var(--color-accent);
+/* Post List */
+.post-list {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
 }
 
-/* Link Styling */
-a {
-    text-decoration: none;
-    color: var(--color-text);
-    transition: color var(--transition-base);
+/* Post Card */
+.post-card {
+    display: flex;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: all var(--transition-base);
 }
 
-a:hover {
-    color: var(--color-accent);
+.post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--color-accent-light);
 }
 
-/* Profile Image */
-.circle-image {
-    width: 240px;
-    height: 240px;
-    border-radius: var(--radius-full);
+/* Thumbnail */
+.post-thumbnail {
+    flex-shrink: 0;
+    width: 120px;
+    height: 90px;
+    border-radius: var(--radius-md);
     overflow: hidden;
-    margin: auto;
-    margin-top: var(--spacing-xl);
-    margin-bottom: var(--spacing-xl);
-    box-shadow: var(--shadow-md);
-    border: 5px solid var(--color-accent-light);
-    transition: all var(--transition-slow);
+    background-color: var(--color-bg-secondary);
 }
 
-.circle-image:hover {
-    transform: scale(1.05);
-    box-shadow: var(--shadow-glow);
-    border-color: var(--color-accent);
-}
-
-.circle-image img {
+.post-thumbnail img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: var(--radius-full);
-    object-position: 50% 42%;
 }
 
-@media (min-width: 768px) {
-    .description {
-        margin-top: var(--spacing-xl);
-    }
+/* Post Info */
+.post-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
 }
 
-/* Admin Section */
-.admin-section {
-    max-width: 960px;
-    margin: var(--spacing-xl) auto 0 auto;
+.post-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 var(--spacing-xs) 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+.post-excerpt {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--spacing-xs) 0;
+    line-height: 1.5;
+}
+
+.post-date {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+}
+
+/* View All */
+.view-all {
+    text-align: center;
+    margin-top: var(--spacing-2xl);
+}
+
+.btn-view-all {
+    padding: var(--spacing-sm) var(--spacing-2xl);
+    border: 2px solid var(--color-accent);
+    background: transparent;
+    color: var(--color-accent);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.btn-view-all:hover {
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Mobile */
 @media (max-width: 768px) {
-    .hero-quote p {
-        font-size: var(--font-size-base);
+    .post-card {
+        flex-direction: column;
+        gap: var(--spacing-md);
     }
 
-    .circle-image {
-        width: 200px;
-        height: 200px;
+    .post-thumbnail {
+        width: 100%;
+        height: 180px;
+    }
+
+    .post-title {
+        white-space: normal;
     }
 }
 </style>

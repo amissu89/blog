@@ -36,10 +36,11 @@
   <style>
   /* Toast UI Viewer 폰트 사이즈 */
   .toastui-editor-contents {
-    font-size: 16px;
-    line-height: 1.8;
+    font-family: 'Noto Serif KR', serif;
+  font-size: 18px;
+  line-height: 1.8;
   }
-
+ 
   .toastui-editor-contents p,
   .toastui-editor-contents li,
   .toastui-editor-contents td,
