@@ -204,13 +204,38 @@ async function generateSitemap() {
 }
 
 
+/**
+ * Google Indexing API로 URL 색인 요청
+ * @param {string} url - 색인 요청할 URL
+ * @param {string} type - 'URL_UPDATED' 또는 'URL_DELETED'
+ */
+async function requestIndexing(url, type = 'URL_UPDATED') {
+    try {
+        const { google } = require('googleapis');
+        const auth = new google.auth.GoogleAuth({
+            scopes: ['https://www.googleapis.com/auth/indexing'],
+        });
+        const indexing = google.indexing({ version: 'v3', auth });
+        const result = await indexing.urlNotifications.publish({
+            requestBody: { url, type },
+        });
+        console.log(`✅ Indexing API: ${type} for ${url}`, result.status);
+    } catch (error) {
+        console.error(`❌ Indexing API failed for ${url}:`, error.message);
+    }
+}
+
 exports.generateSitemapOnCreate = onDocumentCreated(
     {
         document: `${BOARD_INFO}/{docId}`,
         region: REGION,
     },
     async (event) => {
-        await generateSitemap();
+        const docId = event.params.docId;
+        await Promise.all([
+            generateSitemap(),
+            requestIndexing(`${CUSTOM_DOMAIN}/view/${docId}`),
+        ]);
     }
 );
 
@@ -220,7 +245,11 @@ exports.generateSitemapOnDelete = onDocumentDeleted(
         region: REGION,
     },
     async (event) => {
-        await generateSitemap();
+        const docId = event.params.docId;
+        await Promise.all([
+            generateSitemap(),
+            requestIndexing(`${CUSTOM_DOMAIN}/view/${docId}`, 'URL_DELETED'),
+        ]);
     }
 );
 
