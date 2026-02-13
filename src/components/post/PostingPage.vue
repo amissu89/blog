@@ -1,22 +1,28 @@
 <template>
   <div class="container">
-    <label for="post-category" class="form-label">Category</label>
-    <select id="post-category" class="form-select" aria-label="Select category of posting" v-model="postData.category">
-      <option value="daily">Daily</option>
-      <option value="work">Work</option>
-      <option value="study">Study</option>
-    </select>
-
-    <div class="mb-3">
-      <label for="post-title" class="form-label">Title</label>
-      <input type="text" class="form-control" id="post-title" v-model="postData.title" />
+    <div class="row">
+      <div class="col-2">
+        <label for="post-category" class="form-label">Category</label>
+        <select id="post-category" class="form-select" aria-label="Select category of posting"
+          v-model="postData.category">
+          <option value="daily">Daily</option>
+          <option value="work">Work</option>
+          <option value="study">Study</option>
+        </select>
+      </div>
+      <div class="col-10">
+        <label for="post-title" class="form-label">Title</label>
+        <input type="text" class="form-control" id="post-title" v-model="postData.title" />
+      </div>
     </div>
 
+    <div class="mb-3"></div>
     <ToastEditor v-model="postData.content" @add-image="handleImageUpload" @update:modelValue="updateContent" />
 
     <div class="mb-3">
       <label for="post-summary" class="form-label">설명</label>
-      <input type="text" class="form-control" id="post-summary" v-model="postData.summary" maxlength="150" placeholder="이 글의 핵심내용 간단히 요약"/>
+      <input type="text" class="form-control" id="post-summary" v-model="postData.summary" maxlength="150"
+        placeholder="이 글의 핵심내용 간단히 요약" />
     </div>
 
     <div class="buttons">
