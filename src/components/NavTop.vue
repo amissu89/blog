@@ -102,7 +102,7 @@ const signOut = async () => {
 <style scoped>
 /* Navbar - Clean & Minimal */
 .navbar {
-  background-color: var(--color-bg);
+  background-color: #ffffff;
   padding: var(--spacing-lg) var(--spacing-md);
   z-index: 1000;
   box-shadow: var(--shadow-xs);

@@ -63,4 +63,9 @@
   .toastui-editor-contents h4 {
     font-size: 18px;
   }
+
+  .toastui-editor-contents img {
+    max-width: 100%;
+    height: auto;
+  }
   </style>

@@ -57,7 +57,7 @@ const loading = ref(true)
 const defaultThumbnail = '/thumbnail.png'
 
 const RECENT_POST_COUNT = 5
-const EXCERPT_LENGTH = 30
+const EXCERPT_LENGTH = 60
 
 function stripHtml(html) {
     const tmp = document.createElement('div')

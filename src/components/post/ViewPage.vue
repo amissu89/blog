@@ -185,9 +185,6 @@ const deleteMode = async (id) => {
 <style scoped>
 .container {
     margin-top: var(--spacing-xl);
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 /* Loading State */
